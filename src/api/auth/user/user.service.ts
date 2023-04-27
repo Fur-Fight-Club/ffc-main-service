@@ -6,10 +6,10 @@ import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 @Injectable()
 class UserApiImpl implements UserApi {
   constructor(@Inject(AuthApi) private authApi: AuthApi) { }
-  async login(email: string, password: string): Promise<User> {
-    const response = await handleApiResponse<User | null>(
+  async login(email: string, password: string): Promise<{ access_token: string }> {
+    const response = await handleApiResponse<{ access_token: string } | null>(
       await this.authApi.fetch(
-        `login`,
+        `user/login`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -27,7 +27,7 @@ class UserApiImpl implements UserApi {
   async register(firstname: string, lastname: string, email: string, password: string): Promise<User> {
     const response = await handleApiResponse<User>(
       await this.authApi.fetch(
-        `register`,
+        `user/register`,
         {
           method: "POST",
           body: JSON.stringify({

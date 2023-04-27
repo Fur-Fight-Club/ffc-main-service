@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export interface UserApi {
-  login(email: string, password: string): Promise<User>
+  login(email: string, password: string): Promise<{ access_token: string }>
   register(firstname: string, lastname: string, email: string, password: string): Promise<User>
 }
 
@@ -55,6 +55,11 @@ export enum UserRole {
   ADMIN = "ADMIN",
   USER = "USER",
   ANIMAL_OWNER = "ANIMAL_OWNER"
+}
+
+export class LoginResponse {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  access_token: string;
 }
 
 export const UserApi = "UserApi";

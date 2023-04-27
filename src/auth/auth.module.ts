@@ -11,8 +11,8 @@ import { UserApiProvider } from 'src/api/auth/user/user.service';
 @Module({
   imports: [ConfigModule, JwtModule.register({
     global: true,
-  }), AuthApiModule],
+  })],
   controllers: [AuthController],
-  providers: [AuthService, AuthApiProvider, UserApiProvider]
+  providers: [AuthService]
 })
 export class AuthModule { }
