@@ -10,6 +10,14 @@ async function bootstrap() {
     .setTitle('Fur Fight Club — Main service')
     .setDescription('Swagger of the main service of Fur Fight Club')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+      name: "authorization",
+      description: "Bearer authorization token for user",
+      in: "header"
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
