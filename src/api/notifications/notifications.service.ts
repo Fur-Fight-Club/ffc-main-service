@@ -17,7 +17,7 @@ class NotificationsApiImpl implements NotificationsApi {
     const requestUrl = prepareRequestUrl(url);
     const requestInit = prepareRequestInit({
       ...init, headers: {
-        "x-service-auth": this.serviceAuth.signinService().access_token,
+        "x-service-auth": `Bearer ${this.serviceAuth.signinService().access_token}`,
       }
     });
     return fetch(this.baseUrl + "/" + requestUrl, requestInit);
