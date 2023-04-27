@@ -7,7 +7,7 @@ import * as fs from "fs"
 export class AuthService {
   constructor(private jwtService: JwtService, private config: ConfigService) { }
 
-  signinService() {
+  signinService(): { access_token: string } {
     const payload = {
       iss: this.config.get<string>('issuer'),
       aud: "*",

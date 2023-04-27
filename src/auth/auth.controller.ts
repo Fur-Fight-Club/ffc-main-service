@@ -1,12 +1,14 @@
-import { Controller, HttpCode, HttpStatus, Post, Get, Request, UseGuards } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Post, Get, Request, UseGuards, Body, Inject } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JWTServiceRequest } from './auth.model';
 import { ServiceGuard } from './auth-service.guard';
-import { ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginRequest, UserApi, UserResponse } from 'src/api/auth/user/user.interface';
 
 @Controller('auth')
+@ApiTags("Authentication")
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService, @Inject(UserApi) private userApi: UserApi) { }
 
   @HttpCode(HttpStatus.OK)
   @Post('login-service')
@@ -27,5 +29,20 @@ export class AuthController {
     @Request() req: JWTServiceRequest,
   ) {
     return req.service;
+  }
+
+  @ApiBody({
+    description: "Un utilisateur se connecte",
+    type: LoginRequest
+  })
+  @ApiResponse({
+    description: "L'utilisateur est connecté",
+    type: UserResponse
+  })
+  @Post('login')
+  async login(
+    @Body() body: LoginRequest
+  ) {
+    return await this.userApi.login(body.email, body.password);
   }
 }
