@@ -8,11 +8,6 @@ import * as fs from "fs"
 @Module({
   imports: [ConfigModule, JwtModule.register({
     global: true,
-    signOptions: {
-      expiresIn: '60s',
-      algorithm: 'RS256',
-    },
-    privateKey: fs.readFileSync("ssl/service-auth-private.pem"),
   })],
   controllers: [AuthController],
   providers: [AuthService]

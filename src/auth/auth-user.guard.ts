@@ -20,7 +20,7 @@ export class UserGuard implements CanActivate {
     try {
       const tokenPayload = await this.jwtService.verifyAsync(token, {
         algorithms: ['RS256'],
-        publicKey: fs.readFileSync("ssl/service-auth-public.pem"),
+        publicKey: fs.readFileSync("ssl/user-auth-public.pem"),
 
       }) as JWTServicePayload;
 

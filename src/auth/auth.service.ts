@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import * as fs from "fs"
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,11 @@ export class AuthService {
       sub: this.config.get<string>('service'),
     };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        algorithm: 'RS256',
+        expiresIn: '60s',
+        privateKey: fs.readFileSync("ssl/service-auth-private.pem"),
+      }),
     };
   }
 }
