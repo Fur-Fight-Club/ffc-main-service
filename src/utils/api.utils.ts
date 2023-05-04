@@ -53,7 +53,7 @@ export function checkApiResponse<T>(
   errorMapper?: ErrorMapper,
 ): asserts response is T {
   if (isApiError(response)) {
-    console.log("API ERROR STATUS", response.statusCode);
+    console.log("API ERROR STATUS", response);
 
     if (response.statusCode >= 500) {
       throw new InternalServerErrorException(response);
