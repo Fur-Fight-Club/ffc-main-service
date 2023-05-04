@@ -10,7 +10,7 @@ import { AuthService } from "src/auth/auth.service";
 class NotificationsApiImpl implements NotificationsApi {
   private baseUrl: string;
   constructor(private configService: ConfigService, private serviceAuth: AuthService) {
-    this.baseUrl = this.configService.get<string>("ffc_auth_url")!;
+    this.baseUrl = this.configService.get<string>("ffc_notifications_url")!;
   }
 
   async fetch(url: RequestInfo, init: RequestInit): Promise<Response> {
