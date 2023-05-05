@@ -24,4 +24,4 @@ import { NotificationsModule } from "src/api/notifications/notifications.module"
     EmailApiProvider,
   ],
 })
-export class AccountModule { }
+export class AccountModule {}

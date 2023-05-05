@@ -27,7 +27,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
     "@prisma/client": "^4.13.0",
-    "ffc-prisma-package": "^2.0.0",
+    "ffc-prisma-package": "^2.3.1",
     "fs": "^0.0.1-security",
     "nestjs-zod": "^2.2.0",
     "node-fetch": "^2.6.9",
