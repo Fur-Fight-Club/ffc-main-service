@@ -87,6 +87,24 @@ class UserApiImpl implements UserApi {
 
     return response;
   }
+
+  async resetPassword(email_token: string, password: string): Promise<User> {
+    const response = await handleApiResponse<User>(
+      await this.authApi.fetch(`user/reset-password`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          email_token,
+          password,
+        }),
+      })
+    );
+
+    checkApiResponse(response, {
+      404: () => new NotFoundException("Can find this user"),
+    });
+
+    return response;
+  }
 }
 
 export const UserApiProvider: Provider = {

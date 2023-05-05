@@ -12,6 +12,7 @@ export interface UserApi {
   ): Promise<User>;
   confirmAccount(email_token: string): ConfirmAccountResponse;
   askResetPassword(email: string): Promise<{ email_token: string }>;
+  resetPassword(email_token: string, password: string): Promise<User>;
 }
 
 export interface User {
@@ -106,6 +107,29 @@ export class AskResetPasswordApiBody {
 }
 
 export type AskResetPasswordResponse = Promise<boolean>;
+
+/**
+ * RESET PASSWORD TYPES
+ */
+
+export const resetPassword = z.object({
+  email_token: z.string(),
+  password: z.string(),
+});
+
+export class ResetPasswordDto extends createZodDto(resetPassword) {}
+export type ResetPasswordType = z.infer<typeof resetPassword>;
+
+export class ResetPasswordApiBody {
+  @ApiProperty({
+    type: "string",
+    default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  })
+  email_token: string;
+
+  @ApiProperty({ type: "string", format: "password" })
+  password: string;
+}
 
 /**
  * GENERAL THINGS
