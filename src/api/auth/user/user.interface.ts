@@ -11,6 +11,7 @@ export interface UserApi {
     password: string
   ): Promise<User>;
   confirmAccount(email_token: string): ConfirmAccountResponse;
+  askResetPassword(email: string): Promise<{ email_token: string }>;
 }
 
 export interface User {
@@ -74,17 +75,37 @@ export class LoginResponse {
  */
 export const confirmAccount = z.object({
   email_token: z.string(),
-})
+});
 
-export class ConfirmAccountDto extends createZodDto(confirmAccount) { }
+export class ConfirmAccountDto extends createZodDto(confirmAccount) {}
 export type ConfirmAccountType = z.infer<typeof confirmAccount>;
 
 export class ConfirmAccountApiBody {
-  @ApiProperty({ type: "string", default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" })
+  @ApiProperty({
+    type: "string",
+    default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  })
   email_token: string;
 }
 
 export type ConfirmAccountResponse = Promise<boolean>;
+
+/**
+ * ASK RESET PASSWORD TYPES
+ */
+export const askResetPassword = z.object({
+  email: z.string().email(),
+});
+
+export class AskResetPasswordDto extends createZodDto(askResetPassword) {}
+export type AskResetPasswordType = z.infer<typeof askResetPassword>;
+
+export class AskResetPasswordApiBody {
+  @ApiProperty({ type: "string", format: "email" })
+  email: string;
+}
+
+export type AskResetPasswordResponse = Promise<boolean>;
 
 /**
  * GENERAL THINGS
