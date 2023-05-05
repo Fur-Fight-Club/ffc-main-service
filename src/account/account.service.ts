@@ -9,7 +9,6 @@ import {
   UserApi,
 } from "src/api/auth/user/user.interface";
 import { EmailApi } from "src/api/notifications/mails/mails.interface";
-import { NotificationsApi } from "src/api/notifications/notifications.interface";
 import { PrismaService } from "src/services/prisma.service";
 
 @Injectable()
