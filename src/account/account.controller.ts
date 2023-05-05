@@ -1,10 +1,13 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Patch, Post } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import {
   AskResetPasswordApiBody,
+  AskResetPasswordDto,
   ConfirmAccountApiBody,
   ConfirmAccountDto,
+  ResetPasswordApiBody,
+  ResetPasswordDto,
 } from "src/api/auth/user/user.interface";
 import { ZodValidationPipe } from "nestjs-zod";
 
@@ -27,9 +30,19 @@ export class AccountController {
     description: "Ask for a password reset",
     type: AskResetPasswordApiBody,
   })
-  async askResetPassword(
-    @Body(ZodValidationPipe) body: AskResetPasswordApiBody
-  ) {
+  async askResetPassword(@Body(ZodValidationPipe) body: AskResetPasswordDto) {
     return await this.accountService.askResetPassword(body.email);
+  }
+
+  @Patch("reset-password")
+  @ApiBody({
+    description: "Reset user's password with email token",
+    type: ResetPasswordApiBody,
+  })
+  async resetPassword(@Body(ZodValidationPipe) body: ResetPasswordDto) {
+    return await this.accountService.resetPassword(
+      body.email_token,
+      body.password
+    );
   }
 }

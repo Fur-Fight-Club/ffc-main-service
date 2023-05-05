@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import {
   ConfirmAccountResponse,
+  User,
   UserApi,
 } from "src/api/auth/user/user.interface";
 import { EmailApi } from "src/api/notifications/mails/mails.interface";
@@ -47,5 +48,9 @@ export class AccountService {
     }
 
     return notificationsServiceRes;
+  }
+
+  async resetPassword(email_token: string, password: string): Promise<User> {
+    return await this.userApi.resetPassword(email_token, password);
   }
 }
