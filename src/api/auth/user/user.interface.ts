@@ -1,4 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
+import { z } from "nestjs-zod/z";
 
 export interface UserApi {
   login(email: string, password: string): Promise<{ access_token: string }>;
@@ -8,6 +10,7 @@ export interface UserApi {
     email: string,
     password: string
   ): Promise<User>;
+  confirmAccount(email_token: string): ConfirmAccountResponse;
 }
 
 export interface User {
@@ -65,5 +68,26 @@ export class LoginResponse {
   @ApiProperty({ type: "string", format: "binary" })
   access_token: string;
 }
+
+/**
+ * CONFIRM ACCOUNT TYPES
+ */
+export const confirmAccount = z.object({
+  email_token: z.string(),
+})
+
+export class ConfirmAccountDto extends createZodDto(confirmAccount) { }
+export type ConfirmAccountType = z.infer<typeof confirmAccount>;
+
+export class ConfirmAccountApiBody {
+  @ApiProperty({ type: "string", default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" })
+  email_token: string;
+}
+
+export type ConfirmAccountResponse = Promise<boolean>;
+
+/**
+ * GENERAL THINGS
+ */
 
 export const UserApi = "UserApi";

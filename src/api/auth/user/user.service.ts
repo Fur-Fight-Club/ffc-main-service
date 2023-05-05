@@ -1,6 +1,6 @@
 import { Inject, Injectable, Provider, UnauthorizedException } from "@nestjs/common";
 import { AuthApi } from "../auth.interface";
-import { User, UserApi } from "./user.interface";
+import { ConfirmAccountResponse, User, UserApi } from "./user.interface";
 import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 
 @Injectable()
@@ -44,6 +44,23 @@ class UserApiImpl implements UserApi {
 
     return response;
 
+  }
+  async confirmAccount(email_token: string): ConfirmAccountResponse {
+    const response = await handleApiResponse<ConfirmAccountResponse>(
+      await this.authApi.fetch(
+        `user/confirm-account`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email_token
+          })
+        },
+      ),
+    );
+
+    checkApiResponse(response, { 404: () => new UnauthorizedException("Invalid confirmation token") });
+
+    return response;
   }
 }
 
