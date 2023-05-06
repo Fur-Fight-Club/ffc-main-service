@@ -55,6 +55,31 @@ class EmailsApiImpl implements EmailApi {
 
     return response;
   }
+
+  async sendInvoiceEmail(
+    email: string,
+    name: string,
+    price: number,
+    invoice_id: number,
+    attachment: string
+  ): Promise<boolean> {
+    const response = await handleApiResponse<boolean>(
+      await this.notificationsApi.fetch(`emails/send-invoice`, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          name,
+          price,
+          invoice_id,
+          attachment,
+        }),
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
 }
 
 export const EmailApiProvider: Provider = {
