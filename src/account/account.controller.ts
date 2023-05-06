@@ -1,6 +1,6 @@
 import { Body, Controller, Patch, Post } from "@nestjs/common";
-import { AccountService } from "./account.service";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { ZodValidationPipe } from "nestjs-zod";
 import {
   AskResetPasswordApiBody,
   AskResetPasswordDto,
@@ -8,8 +8,8 @@ import {
   ConfirmAccountDto,
   ResetPasswordApiBody,
   ResetPasswordDto,
-} from "src/api/auth/user/user.interface";
-import { ZodValidationPipe } from "nestjs-zod";
+} from "src/api/auth/user/user.schema";
+import { AccountService } from "./account.service";
 
 @Controller("account")
 @ApiTags("Account Controller")

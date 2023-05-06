@@ -5,7 +5,7 @@ import {
   LoginResponse,
   RegisterRequest,
   UserResponse,
-} from "src/api/auth/user/user.interface";
+} from "src/api/auth/user/user.schema";
 import { UserService } from "./user.service";
 
 @Controller("user")
