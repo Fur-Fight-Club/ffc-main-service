@@ -54,16 +54,10 @@ const updateMonsterSchema = monsterSchema.pick({
   monster_type: true,
 });
 
-const removeMonsterSchema = monsterSchema.pick({
-  id: true,
-});
-
 export class CreateMonsterDto extends createZodDto(createMonsterSchema) {}
 
 export class GetMonsterDto extends createZodDto(getMonsterSchema) {}
 
 export class UpdateMonsterDto extends createZodDto(updateMonsterSchema) {}
-
-export class RemoveMonsterDto extends createZodDto(removeMonsterSchema) {}
 
 export type MonsterDto = z.infer<typeof monsterSchema>;
