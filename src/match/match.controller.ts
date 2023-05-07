@@ -15,11 +15,11 @@ import {
   CreateMessageDto,
 } from "src/api/notifications/match-message/match-message.interface";
 import { UserGuard } from "src/auth/auth-user.guard";
-import { JWTUserRequest } from "src/auth/auth.model";
 import {
   CreateMatchDto,
   CreateMatchWaitingListDto,
   GetMatchDto,
+  ValidateMatchWaitingListDto,
 } from "./match.schema";
 import { MatchService } from "./match.service";
 
@@ -45,6 +45,13 @@ export class MatchController {
   }
 
   //valider le mec qui veux rejoindre le match
+  @Patch("join/validate/:id")
+  async validateWaitingList(
+    @Param("id", ParseIntPipe) id: GetMatchDto,
+    @Body(ZodValidationPipe) data: ValidateMatchWaitingListDto
+  ) {
+    return this.matchService.validateWaitingListMatch({ ...data, id: +id });
+  }
 
   // Valider un match
 

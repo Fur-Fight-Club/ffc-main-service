@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Monster } from "ffc-prisma-package/dist/client";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
@@ -11,6 +10,7 @@ import {
   GetMatchDto,
   MatchInterface,
   UpdateMatchDto,
+  ValidateMatchWaitingListDto,
 } from "./match.schema";
 
 @Injectable()
@@ -29,7 +29,7 @@ export class MatchService {
       where: { id: monster1 },
     });
 
-    // TODO: replace w/ repository
+    //TODO: replace w/ repository
     const arena = await this.prisma.arena.findUnique({
       where: { id: fk_arena },
     });
@@ -52,7 +52,7 @@ export class MatchService {
     params: CreateMatchWaitingListDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
-
+    // create a new match waiting list for the monster and set the status to waiting
     return this.matchRepository.updateMatch({
       where: { id },
       data: {
@@ -62,6 +62,31 @@ export class MatchService {
               connect: {
                 id: monster,
               },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // validate the monster is in the waiting list
+  async validateWaitingListMatch(
+    params: ValidateMatchWaitingListDto
+  ): Promise<MatchInterface> {
+    const { id, monster } = params;
+
+    return this.matchRepository.updateMatch({
+      where: { id },
+      data: {
+        MatchWaitingList: {
+          update: {
+            where: {
+              Monster: {
+                id: monster,
+              },
+            },
+            data: {
+              status: `ACCEPTED`,
             },
           },
         },

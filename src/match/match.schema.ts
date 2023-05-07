@@ -10,8 +10,6 @@ const weightCategoryEnumSchema = z.enum([
   "OH_LAWD_HE_COMIN",
 ]);
 
-const statusEnumSchema = z.enum(["WAITING", "ACCEPTED", "REFUSED"]);
-
 const matchSchema = z.object({
   id: z.number().int(),
   monster1: z.number().int(),
@@ -61,6 +59,7 @@ export class DeleteMatchDto extends createZodDto(deleteMatchSchema) {}
 /*
     MATCH WAITING LIST
 */
+const statusEnumSchema = z.enum(["ACCEPTED", "REJECTED", "PENDING"]);
 
 const matchWaitingListSchema = z.object({
   id: z.number().int(),
@@ -76,6 +75,19 @@ const createMatchWaitingListSchema = matchWaitingListSchema.pick({
   status: true,
 });
 
+const validateMatchWaitingListSchema = matchWaitingListSchema.pick({
+  id: true,
+  monster: true,
+  match: true,
+  status: true,
+});
+
+export type StatusEnum = z.infer<typeof statusEnumSchema>;
+
 export class CreateMatchWaitingListDto extends createZodDto(
   createMatchWaitingListSchema
+) {}
+
+export class ValidateMatchWaitingListDto extends createZodDto(
+  validateMatchWaitingListSchema
 ) {}
