@@ -3,10 +3,7 @@ import { AnalyticsApiProvider } from "./analytics.service";
 import { AuthService } from "src/auth/auth.service";
 
 @Module({
-  providers: [
-    AnalyticsApiProvider,
-    AuthService
-  ],
+  providers: [AnalyticsApiProvider, AuthService],
   exports: [],
 })
-export class AnalyticsModule { }
+export class AnalyticsModule {}

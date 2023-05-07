@@ -5,11 +5,7 @@ import { EmailApiProvider } from "./mails/mails.service";
 import { EmailApi } from "./mails/mails.interface";
 
 @Module({
-  providers: [
-    NotificationsApiProvider,
-    EmailApiProvider,
-    AuthService
-  ],
+  providers: [NotificationsApiProvider, EmailApiProvider, AuthService],
   exports: [EmailApi],
 })
-export class NotificationsModule { }
+export class NotificationsModule {}

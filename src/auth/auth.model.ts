@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { UserRole } from "src/api/auth/user/user.interface";
+import { UserRoleInterface } from "src/api/auth/user/user.schema";
 
 export interface JWTServicePayload {
   iss: string; // Issuer
@@ -16,7 +16,7 @@ export interface JWTUserPayload {
   iss: string; // Issuer
   aud: string; // Audience
   sub: number; // User id
-  role: UserRole;
+  role: UserRoleInterface;
   // Add more properties ?
 }
 

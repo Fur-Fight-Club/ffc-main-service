@@ -9,6 +9,8 @@ import { UserModule } from "./user/user.module";
 import { AccountModule } from "./account/account.module";
 import { MatchModule } from "./match/match.module";
 import { MonsterModule } from "./monster/monster.module";
+import { CreditsModule } from "./credits/credits.module";
+import { PaymentsModule } from "./payments/payments.module";
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { MonsterModule } from "./monster/monster.module";
     AccountModule,
     MatchModule,
     MonsterModule,
+    CreditsModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

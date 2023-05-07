@@ -6,7 +6,6 @@ import {
 
 export class StripeCallbackValidationPipe implements PipeTransform {
   readonly allowedStatuses = ["error", "success"];
-  constructor() {}
 
   transform(value: any, metadata: ArgumentMetadata) {
     if (!this.isStatusValid(value)) {

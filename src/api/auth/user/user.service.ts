@@ -109,8 +109,8 @@ class UserApiImpl implements UserApi {
     return response;
   }
 
-  async getById(id: number): Promise<User> {
-    const response = await handleApiResponse<User>(
+  async getById(id: number): Promise<UserInterface> {
+    const response = await handleApiResponse<UserInterface>(
       await this.authApi.fetch(`user/${id}`, {
         method: "GET",
       })
