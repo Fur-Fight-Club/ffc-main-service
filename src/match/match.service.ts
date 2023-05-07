@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { Monster } from "ffc-prisma-package/dist/client";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
