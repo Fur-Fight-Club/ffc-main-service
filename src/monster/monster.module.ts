@@ -6,10 +6,17 @@ import { AuthModule } from "src/auth/auth.module";
 import { AuthService } from "src/auth/auth.service";
 import { AuthApiProvider } from "src/api/auth/auth.service";
 import { PrismaService } from "src/services/prisma.service";
+import { MonsterRepository } from "./monster.repository";
 
 @Module({
   imports: [ConfigModule, AuthModule],
   controllers: [MonsterController],
-  providers: [MonsterService, AuthService, AuthApiProvider, PrismaService],
+  providers: [
+    MonsterService,
+    MonsterRepository,
+    AuthService,
+    AuthApiProvider,
+    PrismaService,
+  ],
 })
 export class MonsterModule {}

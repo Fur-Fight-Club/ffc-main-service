@@ -11,7 +11,7 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 import { MonsterService } from "./monster.service";
 import { Monster } from "ffc-prisma-package/dist/client";
-import { CreateMonsterDto } from "./monster.schema";
+import { CreateMonsterDto, GetMonsterDto, RemoveMonsterDto } from "./monster.schema";
 import { ZodValidationPipe } from "nestjs-zod";
 
 @Controller("monster")
@@ -21,29 +21,29 @@ export class MonsterController {
 
   @Get()
   @HttpCode(200)
-  getAll(): Promise<Monster[]> {
-    return this.monsterService.findAll();
+  async getAll() {
+    return await this.monsterService.getMonsters();
   }
 
   @Get("id")
   @HttpCode(200)
-  getOne(@Param("id") id: number): Promise<Monster> {
-    return this.monsterService.findOne(id);
+  async getOne(@Body(ZodValidationPipe) data: GetMonsterDto) {
+    return await this.monsterService.getMonster(data);
   }
 
   @Post()
   @HttpCode(201)
   create(@Body(ZodValidationPipe) body: CreateMonsterDto) {
-    return this.monsterService.create(body);
+    return this.monsterService.createMonster(body);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: number, @Body() body: Monster): Promise<Monster> {
-    return this.monsterService.update(id, body);
-  }
+  // @Patch(":id")
+  // update(@Param("id") id: number, @Body() body: Monster): Promise<Monster> {
+  //   return this.monsterService.updateMonster(id, body);
+  // }
 
   @Delete(":id")
-  delete(@Param("id") id: number): Promise<Monster> {
-    return this.monsterService.delete(id);
+  async delete(@Body(ZodValidationPipe) data: RemoveMonsterDto) {
+    return await this.monsterService.deleteMonster(data);
   }
 }

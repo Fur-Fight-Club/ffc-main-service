@@ -1,28 +1,37 @@
 import { Injectable } from "@nestjs/common";
-import { Monster } from "ffc-prisma-package/dist/client";
-import { PrismaService } from "src/services/prisma.service";
-import { CreateMonsterDto, MonsterDto } from "./monster.schema";
+import {
+  CreateMonsterDto,
+  GetMonsterDto,
+  MonsterDto,
+  UpdateMonsterDto,
+} from "./monster.schema";
+import { MonsterRepository } from "./monster.repository";
 
 @Injectable()
 export class MonsterService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private monsterRepository: MonsterRepository) {}
 
-  async findAll(): Promise<Monster[]> {
-    return this.prisma.monster.findMany();
+  async getMonsters(): Promise<MonsterDto[]> {
+    const monsters = await this.monsterRepository.getMonsters({});
+
+    return monsters;
   }
 
-  async findOne(id: number): Promise<Monster> {
-    return this.prisma.monster.findUnique({
+  async getMonster(params: GetMonsterDto): Promise<MonsterDto> {
+    const { id } = params;
+    const monster = await this.monsterRepository.getMonster({
       where: {
         id,
       },
     });
+
+    return monster;
   }
 
-  async create(createMonsterDto: CreateMonsterDto): Promise<MonsterDto> {
+  async createMonster(createMonsterDto: CreateMonsterDto): Promise<MonsterDto> {
     const { name, weight, fk_user, weightCategoryId, monsterTypeId } =
       createMonsterDto;
-    const monster = await this.prisma.monster.create({
+    const monster = await this.monsterRepository.createMonster({
       data: {
         name,
         weight,
@@ -35,20 +44,28 @@ export class MonsterService {
     return monster;
   }
 
-  async update(id: number, data: Monster): Promise<Monster> {
-    return this.prisma.monster.update({
-      where: {
-        id: id,
-      },
-      data,
-    });
-  }
+  // async update(updateMonsterDto: UpdateMonsterDto): Promise<Monster> {
+  //   const { name, weight, weightCategoryId, monsterTypeId } = updateMonsterDto;
+  //   const monster = await this.monsterRepository.updateMonster({
+  //     data: {
+  //       name,
+  //       weight,
+  //       weightCategoryId,
+  //       monsterTypeId,
+  //     },
+  //   });
 
-  async delete(id: number): Promise<Monster> {
-    return this.prisma.monster.delete({
+  //   return monster;
+  // }
+
+  async deleteMonster(params: GetMonsterDto): Promise<MonsterDto> {
+    const { id } = params;
+    const monster = await this.monsterRepository.deleteMonster({
       where: {
         id,
       },
     });
+
+    return monster;
   }
 }
