@@ -11,6 +11,7 @@ import { MatchModule } from "./match/match.module";
 import { MonsterModule } from "./monster/monster.module";
 import { CreditsModule } from "./credits/credits.module";
 import { PaymentsModule } from "./payments/payments.module";
+import { ArenasModule } from "./arenas/arenas.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PaymentsModule } from "./payments/payments.module";
     MonsterModule,
     CreditsModule,
     PaymentsModule,
+    ArenasModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
