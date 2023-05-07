@@ -1,6 +1,8 @@
+import { Injectable } from "@nestjs/common";
 import { Prisma, Arena } from "ffc-prisma-package/dist/client";
 import { PrismaService } from "src/services/prisma.service";
 
+@Injectable()
 export class ArenaRepository {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -30,8 +32,8 @@ export class ArenaRepository {
 
   async createArena(params: { data: Prisma.ArenaCreateInput }): Promise<Arena> {
     const { data } = params;
-    const result = await this.prisma.arena.create({ data });
-    return result;
+
+    return await this.prisma.arena.create({ data });
   }
 
   async updateArena(params: {
