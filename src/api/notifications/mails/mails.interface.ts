@@ -17,7 +17,7 @@ export interface EmailApi {
     email: string,
     name: string,
     price: number,
-    invoice_id: number,
+    invoice_id: string,
     attachment: string
   ): Promise<boolean>;
 }
@@ -29,7 +29,7 @@ export const sendInvoiceEmail = z.object({
   email: z.string().email(),
   name: z.string(),
   price: z.number(),
-  invoice_id: z.number(),
+  invoice_id: z.string(),
   attachment: z.string(),
 });
 
@@ -44,8 +44,8 @@ export class SendInvoiceEmailApiBody {
   name: string;
   @ApiProperty({ type: "number" })
   price: number;
-  @ApiProperty({ type: "number" })
-  invoice_id: number;
+  @ApiProperty({ type: "string" })
+  invoice_id: string;
   @ApiProperty({ type: "string" })
   attachment: string;
 }

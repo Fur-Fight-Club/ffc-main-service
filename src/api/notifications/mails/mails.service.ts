@@ -3,6 +3,7 @@ import {
   Injectable,
   Provider,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from "@nestjs/common";
 import { EmailApi } from "./mails.interface";
 import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
@@ -60,7 +61,7 @@ class EmailsApiImpl implements EmailApi {
     email: string,
     name: string,
     price: number,
-    invoice_id: number,
+    invoice_id: string,
     attachment: string
   ): Promise<boolean> {
     const response = await handleApiResponse<boolean>(
@@ -76,7 +77,9 @@ class EmailsApiImpl implements EmailApi {
       })
     );
 
-    checkApiResponse(response);
+    checkApiResponse(response, {
+      400: (response) => new UnprocessableEntityException(response),
+    });
 
     return response;
   }
