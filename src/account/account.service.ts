@@ -5,9 +5,9 @@ import {
 } from "@nestjs/common";
 import {
   ConfirmAccountResponse,
-  User,
   UserApi,
-} from "src/api/auth/user/user.interface";
+  UserInterface,
+} from "src/api/auth/user/user.schema";
 import { EmailApi } from "src/api/notifications/mails/mails.interface";
 import { PrismaService } from "src/services/prisma.service";
 
@@ -49,7 +49,10 @@ export class AccountService {
     return notificationsServiceRes;
   }
 
-  async resetPassword(email_token: string, password: string): Promise<User> {
+  async resetPassword(
+    email_token: string,
+    password: string
+  ): Promise<UserInterface> {
     return await this.userApi.resetPassword(email_token, password);
   }
 }

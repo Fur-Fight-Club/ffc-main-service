@@ -5,9 +5,9 @@ import {
   Provider,
   UnauthorizedException,
 } from "@nestjs/common";
-import { AuthApi } from "../auth.interface";
-import { ConfirmAccountResponse, User, UserApi } from "./user.interface";
 import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
+import { AuthApi } from "../auth.interface";
+import { ConfirmAccountResponse, UserApi, UserInterface } from "./user.schema";
 
 @Injectable()
 class UserApiImpl implements UserApi {
@@ -37,8 +37,8 @@ class UserApiImpl implements UserApi {
     lastname: string,
     email: string,
     password: string
-  ): Promise<User> {
-    const response = await handleApiResponse<User>(
+  ): Promise<UserInterface> {
+    const response = await handleApiResponse<UserInterface>(
       await this.authApi.fetch(`user/register`, {
         method: "POST",
         body: JSON.stringify({
@@ -88,8 +88,11 @@ class UserApiImpl implements UserApi {
     return response;
   }
 
-  async resetPassword(email_token: string, password: string): Promise<User> {
-    const response = await handleApiResponse<User>(
+  async resetPassword(
+    email_token: string,
+    password: string
+  ): Promise<UserInterface> {
+    const response = await handleApiResponse<UserInterface>(
       await this.authApi.fetch(`user/reset-password`, {
         method: "PATCH",
         body: JSON.stringify({
