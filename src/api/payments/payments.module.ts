@@ -3,10 +3,7 @@ import { PaymentsApiProvider } from "./payments.service";
 import { AuthService } from "src/auth/auth.service";
 
 @Module({
-  providers: [
-    PaymentsApiProvider,
-    AuthService
-  ],
+  providers: [PaymentsApiProvider, AuthService],
   exports: [],
 })
-export class PaymentsModule { }
+export class PaymentsModule {}

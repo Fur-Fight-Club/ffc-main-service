@@ -80,6 +80,7 @@ export interface UserApi {
   confirmAccount(email_token: string): ConfirmAccountResponse;
   askResetPassword(email: string): Promise<{ email_token: string }>;
   resetPassword(email_token: string, password: string): Promise<UserInterface>;
+  getById(id: number): Promise<UserInterface>;
 }
 
 export class LoginRequest {
