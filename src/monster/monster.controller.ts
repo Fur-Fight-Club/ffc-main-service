@@ -11,7 +11,12 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 import { MonsterService } from "./monster.service";
 import { Monster } from "ffc-prisma-package/dist/client";
-import { CreateMonsterDto, GetMonsterDto, RemoveMonsterDto } from "./monster.schema";
+import {
+  CreateMonsterDto,
+  GetMonsterDto,
+  RemoveMonsterDto,
+  UpdateMonsterDto,
+} from "./monster.schema";
 import { ZodValidationPipe } from "nestjs-zod";
 
 @Controller("monster")
@@ -33,14 +38,14 @@ export class MonsterController {
 
   @Post()
   @HttpCode(201)
-  create(@Body(ZodValidationPipe) body: CreateMonsterDto) {
-    return this.monsterService.createMonster(body);
+  create(@Body(ZodValidationPipe) data: CreateMonsterDto) {
+    return this.monsterService.createMonster(data);
   }
 
-  // @Patch(":id")
-  // update(@Param("id") id: number, @Body() body: Monster): Promise<Monster> {
-  //   return this.monsterService.updateMonster(id, body);
-  // }
+  @Patch(":id")
+  async update(@Body(ZodValidationPipe) data: UpdateMonsterDto) {
+    return await this.monsterService.updateMonster(data);
+  }
 
   @Delete(":id")
   async delete(@Body(ZodValidationPipe) data: RemoveMonsterDto) {

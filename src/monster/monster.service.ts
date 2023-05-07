@@ -29,34 +29,37 @@ export class MonsterService {
   }
 
   async createMonster(createMonsterDto: CreateMonsterDto): Promise<MonsterDto> {
-    const { name, weight, fk_user, weightCategoryId, monsterTypeId } =
+    const { name, weight, fk_user, weight_category, monster_type } =
       createMonsterDto;
     const monster = await this.monsterRepository.createMonster({
       data: {
         name,
         weight,
         fk_user,
-        weightCategoryId,
-        monsterTypeId,
+        weight_category,
+        monster_type,
       },
     });
 
     return monster;
   }
 
-  // async update(updateMonsterDto: UpdateMonsterDto): Promise<Monster> {
-  //   const { name, weight, weightCategoryId, monsterTypeId } = updateMonsterDto;
-  //   const monster = await this.monsterRepository.updateMonster({
-  //     data: {
-  //       name,
-  //       weight,
-  //       weightCategoryId,
-  //       monsterTypeId,
-  //     },
-  //   });
+  async updateMonster(updateMonsterDto: UpdateMonsterDto): Promise<MonsterDto> {
+    const { name, weight, weight_category, monster_type } = updateMonsterDto;
+    const monster = await this.monsterRepository.updateMonster({
+      where: {
+        id: updateMonsterDto.id,
+      },
+      data: {
+        name,
+        weight,
+        weight_category,
+        monster_type,
+      },
+    });
 
-  //   return monster;
-  // }
+    return monster;
+  }
 
   async deleteMonster(params: GetMonsterDto): Promise<MonsterDto> {
     const { id } = params;

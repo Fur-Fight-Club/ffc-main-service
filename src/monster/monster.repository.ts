@@ -37,7 +37,6 @@ export class MonsterRepository {
     const { ...result } = await this.prisma.monster.create({ data });
     return result;
   }
-
   async updateMonster(params: {
     where: Prisma.MonsterWhereUniqueInput;
     data: Prisma.MonsterUpdateInput;
