@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { Match } from "ffc-prisma-package/dist/client";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
@@ -23,29 +24,31 @@ export class MatchService {
   ) {}
 
   async createMatch(params: CreateMatchDto): Promise<MatchInterface> {
-    const { fk_arena, weight_category, matchStartDate, monster1 } = params;
+    const {
+      fk_arena,
+      weight_category,
+      matchStartDate: startDate,
+      monster1,
+    } = params;
 
-    const monster = await this.monsterRepository.getMonster({
-      where: { id: monster1 },
-    });
-
-    //TODO: replace w/ repository
-    const arena = await this.prisma.arena.findUnique({
-      where: { id: fk_arena },
-    });
-
-    return this.matchRepository.createMatch({
+    const match = await this.matchRepository.createMatch({
       data: {
         weight_category,
-        matchStartDate,
+        matchStartDate: new Date(startDate),
         Monster1: {
-          connect: monster,
+          connect: {
+            id: monster1,
+          },
         },
         Arena: {
-          connect: arena,
+          connect: {
+            id: fk_arena,
+          },
         },
       },
     });
+
+    return this.parseToZodObject(match);
   }
 
   async joinWaitingListMatch(
@@ -53,7 +56,7 @@ export class MatchService {
   ): Promise<MatchInterface> {
     const { id, monster } = params;
 
-    return this.matchRepository.updateMatch({
+    const match = await this.matchRepository.updateMatch({
       where: { id: id },
       data: {
         MatchWaitingList: {
@@ -67,6 +70,8 @@ export class MatchService {
         },
       },
     });
+
+    return this.parseToZodObject(match);
   }
 
   async validateWaitingListMatch(
@@ -105,7 +110,7 @@ export class MatchService {
     });
 
     //join the match
-    return this.matchRepository.updateMatch({
+    const match = await this.matchRepository.updateMatch({
       where: { id: id },
       data: {
         Monster2: {
@@ -115,15 +120,20 @@ export class MatchService {
         },
       },
     });
+
+    return this.parseToZodObject(match);
   }
 
   async getMatches(): Promise<MatchInterface[]> {
-    return this.matchRepository.getMatches({});
+    const matches = await this.matchRepository.getMatches({});
+    return matches.map((match) => this.parseToZodObject(match));
   }
 
   async getMatch(params: GetMatchDto): Promise<MatchInterface> {
     const { id } = params;
-    return this.matchRepository.getMatch({ where: { id } });
+    return this.parseToZodObject(
+      await this.matchRepository.getMatch({ where: { id } })
+    );
   }
 
   async updateMatch(params: UpdateMatchDto): Promise<MatchInterface> {
@@ -160,15 +170,26 @@ export class MatchService {
       },
     });
 
-    return match;
+    return this.parseToZodObject(match);
   }
 
   async deleteMatch(params: DeleteMatchDto): Promise<MatchInterface> {
     const { id } = params;
-    return this.matchRepository.deleteMatch({ where: { id } });
+    return this.parseToZodObject(
+      await this.matchRepository.deleteMatch({ where: { id } })
+    );
   }
 
   async sendMessage(sender: number, match: number, message: string) {
     return this.matchMessageApi.sendMessage(sender, match, message);
+  }
+
+  private parseToZodObject(match: Match) {
+    const { matchStartDate, matchEndDate, ...matchObject } = match;
+    return {
+      ...matchObject,
+      matchStartDate: matchStartDate?.toISOString(),
+      matchEndDate: matchEndDate?.toISOString(),
+    };
   }
 }

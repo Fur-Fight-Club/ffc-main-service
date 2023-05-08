@@ -15,8 +15,8 @@ const matchSchema = z.object({
   monster1: z.number().int(),
   monster2: z.number().int(),
   fk_arena: z.number().int(),
-  matchStartDate: z.date(),
-  matchEndDate: z.date(),
+  matchStartDate: z.dateString(),
+  matchEndDate: z.dateString(),
   weight_category: weightCategoryEnumSchema,
 });
 
@@ -24,7 +24,6 @@ const createMatchSchema = matchSchema.pick({
   monster1: true,
   fk_arena: true,
   matchStartDate: true,
-  matchEndDate: true,
   weight_category: true,
 });
 
