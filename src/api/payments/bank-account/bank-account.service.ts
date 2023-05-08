@@ -36,7 +36,7 @@ class BankAccountApiImpl implements BankAccountApi {
 
   async getBankAccount(userId: number): Promise<StripeBankAccount> {
     const result = await handleApiResponse<StripeBankAccount>(
-      await this.paymentsApi.fetch(`bank-account/${userId}`, {
+      await this.paymentsApi.fetch(`bank-account/user/${userId}`, {
         method: "GET",
       })
     );
@@ -50,7 +50,7 @@ class BankAccountApiImpl implements BankAccountApi {
 
   async deleteBankAccount(userId: number): Promise<StripeBankAccount> {
     const result = await handleApiResponse<StripeBankAccount>(
-      await this.paymentsApi.fetch(`bank-account/${userId}`, {
+      await this.paymentsApi.fetch(`bank-account/user/${userId}`, {
         method: "DELETE",
       })
     );
