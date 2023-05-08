@@ -54,11 +54,23 @@ export class MatchRepository {
     return this.prisma.match.delete({ where });
   }
 
+  // async getMatchWaitingList(params: {
+  //   where: Prisma.MatchWaitingListWhereUniqueInput;
+  // }): Promise<MatchWaitingList | null> {
+  //   const { where } = params;
+  //   return this.prisma.matchWaitingList.findUnique({
+  //     where,
+  //   });
+  // }
+
+  //get waitingList of a match
   async getMatchWaitingList(params: {
-    where: Prisma.MatchWaitingListWhereUniqueInput;
-  }): Promise<MatchWaitingList | null> {
+    where: Prisma.MatchWaitingListWhereInput;
+  }): Promise<MatchWaitingList[]> {
     const { where } = params;
-    return this.prisma.matchWaitingList.findUnique({ where });
+    return this.prisma.matchWaitingList.findMany({
+      where,
+    });
   }
 
   async createMatchWaitingList(params: {

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -22,6 +23,16 @@ import { MatchService } from "./match.service";
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
+  @Get()
+  async getAll() {
+    return this.matchService.getMatches();
+  }
+
+  @Get(":id")
+  async getOne(@Param("id", ParseIntPipe) id: GetMatchDto) {
+    return this.matchService.getMatch({ id: +id });
+  }
+
   @Post("create")
   async create(@Body(ZodValidationPipe) data: CreateMatchDto) {
     return this.matchService.createMatch(data);
@@ -41,6 +52,14 @@ export class MatchController {
     @Body(ZodValidationPipe) data: ValidateMatchWaitingListControllerDto
   ) {
     return this.matchService.validateWaitingListMatch({ ...data, id: +id });
+  }
+
+  @Patch("join/reject/:id")
+  async rejectWaitingListMatch(
+    @Param("id", ParseIntPipe) id: GetMatchDto,
+    @Body(ZodValidationPipe) data: ValidateMatchWaitingListControllerDto
+  ) {
+    return this.matchService.rejectWaitingListMatch({ ...data, id: +id });
   }
 
   // Fermer un match
