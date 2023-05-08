@@ -12,6 +12,8 @@ import { MonsterModule } from "./monster/monster.module";
 import { CreditsModule } from "./credits/credits.module";
 import { PaymentsModule } from "./payments/payments.module";
 import { ArenasModule } from "./arenas/arenas.module";
+import { WalletModule } from './wallet/wallet.module';
+import { BankAccountModule } from './bank-account/bank-account.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { ArenasModule } from "./arenas/arenas.module";
     CreditsModule,
     PaymentsModule,
     ArenasModule,
+    WalletModule,
+    BankAccountModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
