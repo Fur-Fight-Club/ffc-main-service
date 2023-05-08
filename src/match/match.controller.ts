@@ -22,13 +22,11 @@ import { MatchService } from "./match.service";
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
-  // Créer un match avec des règles
   @Post("create")
   async create(@Body(ZodValidationPipe) data: CreateMatchDto) {
     return this.matchService.createMatch(data);
   }
 
-  // Rejoindre -> waitinglist avant validation
   @Patch("join/:id")
   async joinWaitingList(
     @Param("id", ParseIntPipe) id: GetMatchDto,
@@ -37,7 +35,6 @@ export class MatchController {
     return this.matchService.joinWaitingListMatch({ ...data, id: +id });
   }
 
-  //valider le mec qui veux rejoindre le match
   @Patch("join/validate/:id")
   async validateWaitingList(
     @Param("id", ParseIntPipe) id: GetMatchDto,
@@ -45,8 +42,6 @@ export class MatchController {
   ) {
     return this.matchService.validateWaitingListMatch({ ...data, id: +id });
   }
-
-  // Valider un match
 
   // Fermer un match
   //-> Changer le MMR des Monsters

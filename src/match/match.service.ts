@@ -97,6 +97,24 @@ export class MatchService {
   ): Promise<MatchInterface> {
     const { id, monster } = params;
 
+    //check if the monster exists
+    const monsterObject = await this.monsterRepository.getMonster({
+      where: { id: monster },
+    });
+
+    if (monsterObject === null) {
+      throw new Error(`Monster not found or doesn't exist`);
+    }
+
+    // check if the match exists
+    const matchObject = await this.matchRepository.getMatch({
+      where: { id },
+    });
+
+    if (matchObject === null) {
+      throw new Error(`Match not found or doesn't exist`);
+    }
+
     //find the match waiting list id
     const matchWaitingListId =
       await this.matchRepository.findMatchWaitingListIDWithOneMonsterID({
@@ -110,7 +128,13 @@ export class MatchService {
         },
       });
 
-    console.log(matchWaitingListId);
+    if (matchWaitingListId === null) {
+      throw new Error(`Monster is not in the queue or match doesn't exist`);
+    }
+
+    if (matchWaitingListId.status === `ACCEPTED`) {
+      throw new Error(`Monster is already accepted in the match`);
+    }
 
     //update the match waiting list status
     const updateMatch = await this.matchRepository.updateMatch({
@@ -128,8 +152,6 @@ export class MatchService {
         },
       },
     });
-
-    console.log(updateMatch);
 
     //join the match
     const match = await this.matchRepository.updateMatch({
