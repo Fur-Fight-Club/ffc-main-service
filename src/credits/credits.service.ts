@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserApi } from "src/api/auth/user/user.schema";
-import { EmailApi } from "src/api/notifications/mails/mails.interface";
+import { EmailApi } from "src/api/notifications/mails/mails.schema";
 import {
   BuyCreditReturn,
   CreditsApi,
