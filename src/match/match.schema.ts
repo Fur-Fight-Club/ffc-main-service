@@ -67,11 +67,12 @@ const matchWaitingListSchema = z.object({
   status: statusEnumSchema,
 });
 
-const createMatchWaitingListSchema = matchWaitingListSchema.pick({
+const joinMatchWaitingListSchema = matchWaitingListSchema.pick({
   id: true,
   monster: true,
-  match: true,
-  status: true,
+});
+const createMatchWaitingListSchema = matchWaitingListSchema.pick({
+  monster: true,
 });
 
 const validateMatchWaitingListSchema = matchWaitingListSchema.pick({
@@ -85,6 +86,10 @@ export type StatusEnum = z.infer<typeof statusEnumSchema>;
 
 export class CreateMatchWaitingListDto extends createZodDto(
   createMatchWaitingListSchema
+) {}
+
+export class JoinMatchWaitingListDto extends createZodDto(
+  joinMatchWaitingListSchema
 ) {}
 
 export class ValidateMatchWaitingListDto extends createZodDto(

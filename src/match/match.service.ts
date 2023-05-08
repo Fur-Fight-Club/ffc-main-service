@@ -6,9 +6,9 @@ import { PrismaService } from "src/services/prisma.service";
 import { MatchRepository } from "./match.repository";
 import {
   CreateMatchDto,
-  CreateMatchWaitingListDto,
   DeleteMatchDto,
   GetMatchDto,
+  JoinMatchWaitingListDto,
   MatchInterface,
   UpdateMatchDto,
   ValidateMatchWaitingListDto,
@@ -52,12 +52,30 @@ export class MatchService {
   }
 
   async joinWaitingListMatch(
-    params: CreateMatchWaitingListDto
+    params: JoinMatchWaitingListDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
 
+    //check if the monster exists
+    const monsterObject = await this.monsterRepository.getMonster({
+      where: { id: monster },
+    });
+
+    if (monsterObject === null) {
+      throw new Error(`Monster not found or doesn't exist`);
+    }
+
+    //check if the monster is already in the queue
+    const currentWaitingList = await this.matchRepository.getMatchWaitingList({
+      where: { id },
+    });
+
+    if (currentWaitingList.fk_monster === monster) {
+      throw new Error(`Monster is already in the queue`);
+    }
+
     const match = await this.matchRepository.updateMatch({
-      where: { id: id },
+      where: { id },
       data: {
         MatchWaitingList: {
           create: {
