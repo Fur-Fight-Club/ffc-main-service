@@ -82,4 +82,11 @@ export class MatchRepository {
     const { where } = params;
     return this.prisma.matchWaitingList.delete({ where });
   }
+
+  async findMatchWaitingListIDWithOneMonsterID(params: {
+    where: Prisma.MatchWaitingListWhereInput;
+  }): Promise<MatchWaitingList | null> {
+    const { where } = params;
+    return this.prisma.matchWaitingList.findFirst({ where });
+  }
 }

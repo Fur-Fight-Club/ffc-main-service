@@ -52,9 +52,9 @@ export class MatchService {
     params: CreateMatchWaitingListDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
-    // create a new match waiting list for the monster and set the status to waiting
+
     return this.matchRepository.updateMatch({
-      where: { id },
+      where: { id: id },
       data: {
         MatchWaitingList: {
           create: {
@@ -69,25 +69,48 @@ export class MatchService {
     });
   }
 
-  // validate the monster is in the waiting list
   async validateWaitingListMatch(
     params: ValidateMatchWaitingListDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
 
-    return this.matchRepository.updateMatch({
-      where: { id },
+    //find the match waiting list id
+    const matchWaitingListId =
+      await this.matchRepository.findMatchWaitingListIDWithOneMonsterID({
+        where: {
+          Match: {
+            id,
+          },
+          Monster: {
+            id: monster,
+          },
+        },
+      });
+
+    //update the match waiting list status
+    await this.matchRepository.updateMatch({
+      where: { id: id },
       data: {
         MatchWaitingList: {
           update: {
             where: {
-              Monster: {
-                id: monster,
-              },
+              id: matchWaitingListId.id,
             },
             data: {
               status: `ACCEPTED`,
             },
+          },
+        },
+      },
+    });
+
+    //join the match
+    return this.matchRepository.updateMatch({
+      where: { id: id },
+      data: {
+        Monster2: {
+          connect: {
+            id: monster,
           },
         },
       },
