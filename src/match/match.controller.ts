@@ -12,7 +12,7 @@ import {
   CreateMatchDto,
   CreateMatchWaitingListDto,
   GetMatchDto,
-  ValidateMatchWaitingListDto,
+  ValidateMatchWaitingListControllerDto,
 } from "./match.schema";
 import { MatchService } from "./match.service";
 
@@ -41,7 +41,7 @@ export class MatchController {
   @Patch("join/validate/:id")
   async validateWaitingList(
     @Param("id", ParseIntPipe) id: GetMatchDto,
-    @Body(ZodValidationPipe) data: ValidateMatchWaitingListDto
+    @Body(ZodValidationPipe) data: ValidateMatchWaitingListControllerDto
   ) {
     return this.matchService.validateWaitingListMatch({ ...data, id: +id });
   }

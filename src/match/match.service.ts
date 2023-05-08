@@ -11,7 +11,7 @@ import {
   JoinMatchWaitingListDto,
   MatchInterface,
   UpdateMatchDto,
-  ValidateMatchWaitingListDto,
+  ValidateMatchWaitingListServiceDto,
 } from "./match.schema";
 
 @Injectable()
@@ -93,7 +93,7 @@ export class MatchService {
   }
 
   async validateWaitingListMatch(
-    params: ValidateMatchWaitingListDto
+    params: ValidateMatchWaitingListServiceDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
 
@@ -110,8 +110,10 @@ export class MatchService {
         },
       });
 
+    console.log(matchWaitingListId);
+
     //update the match waiting list status
-    await this.matchRepository.updateMatch({
+    const updateMatch = await this.matchRepository.updateMatch({
       where: { id: id },
       data: {
         MatchWaitingList: {
@@ -126,6 +128,8 @@ export class MatchService {
         },
       },
     });
+
+    console.log(updateMatch);
 
     //join the match
     const match = await this.matchRepository.updateMatch({
