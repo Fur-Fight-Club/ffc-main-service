@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Match } from "ffc-prisma-package/dist/client";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
+import { parseToZodObject } from "src/utils/match.utils";
 import { MatchRepository } from "./match.repository";
 import {
   CreateMatchDto,
@@ -25,7 +25,7 @@ export class MatchService {
 
   async getMatches(): Promise<MatchInterface[]> {
     const matches = await this.matchRepository.getMatches({});
-    return matches.map((match) => this.parseToZodObject(match));
+    return matches.map((match) => parseToZodObject(match));
   }
 
   async getMatch(params: GetMatchDto): Promise<MatchInterface> {
@@ -36,7 +36,7 @@ export class MatchService {
       throw new Error(`Match not found or doesn't exist`);
     }
 
-    return this.parseToZodObject(match);
+    return parseToZodObject(match);
   }
 
   async createMatch(params: CreateMatchDto): Promise<MatchInterface> {
@@ -72,90 +72,45 @@ export class MatchService {
       },
     });
 
-    return this.parseToZodObject(match);
+    return parseToZodObject(match);
   }
 
   async joinWaitingListMatch(
     params: JoinMatchWaitingListDto
   ): Promise<MatchInterface> {
-    const { id, monster } = params;
+    try {
+      const { id, monster } = params;
 
-    //check if the monster exists
-    const monsterObject = await this.monsterRepository.getMonster({
-      where: { id: monster },
-    });
-    if (monsterObject === null) {
-      throw new Error(`Monster not found or doesn't exist`);
-    }
+      // this.matchError.checkIfMatchExists(id);
+      // this.matchError.checkIfMonsterExists(monster);
+      await this.checkIfMonsterIsNotTheSameOnMatch(id, monster);
+      await this.checkIfMonsterIsNotInTheWaitingListOfTheMatch(id, monster);
 
-    //check if the match exists
-    const matchObject = await this.matchRepository.getMatch({
-      where: { id },
-    });
-    if (matchObject === null) {
-      throw new Error(`Match not found or doesn't exist`);
-    }
-
-    //check if the monster is not the same as the monster1
-    if (matchObject?.fk_monster_1 === monster) {
-      throw new Error(`Is actually the same monster in the match`);
-    }
-
-    // check if the monster is not already in the waiting list of the match
-    const currentWaitingList = await this.matchRepository.getMatchWaitingList({
-      where: {
-        Match: {
-          id,
-        },
-        Monster: {
-          id: monster,
-        },
-      },
-    });
-    if (currentWaitingList.length > 0) {
-      throw new Error(`Monster is already in the waiting list of the match`);
-    }
-
-    console.log("🔨 matchObject", matchObject);
-    console.log("🤡 currentWaitingList", currentWaitingList);
-
-    const match = await this.matchRepository.updateMatch({
-      where: { id },
-      data: {
-        MatchWaitingList: {
-          create: {
-            Monster: {
-              connect: {
-                id: monster,
+      const match = await this.matchRepository.updateMatch({
+        where: { id },
+        data: {
+          MatchWaitingList: {
+            create: {
+              Monster: {
+                connect: {
+                  id: monster,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return this.parseToZodObject(match);
+      return parseToZodObject(match);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async validateWaitingListMatch(
     params: ValidateMatchWaitingListServiceDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
-
-    //check if the monster exists
-    const monsterObject = await this.monsterRepository.getMonster({
-      where: { id: monster },
-    });
-    if (monsterObject === null) {
-      throw new Error(`Monster not found or doesn't exist`);
-    }
-    // check if the match exists
-    const matchObject = await this.matchRepository.getMatch({
-      where: { id },
-    });
-    if (matchObject === null) {
-      throw new Error(`Match not found or doesn't exist`);
-    }
 
     //find the match waiting list id
     const matchWaitingListId =
@@ -206,28 +161,13 @@ export class MatchService {
       },
     });
 
-    return this.parseToZodObject(match);
+    return parseToZodObject(match);
   }
 
   async rejectWaitingListMatch(
     params: ValidateMatchWaitingListServiceDto
   ): Promise<MatchInterface> {
     const { id, monster } = params;
-
-    //check if the monster exists
-    const monsterObject = await this.monsterRepository.getMonster({
-      where: { id: monster },
-    });
-    if (monsterObject === null) {
-      throw new Error(`Monster not found or doesn't exist`);
-    }
-    // check if the match exists
-    const matchObject = await this.matchRepository.getMatch({
-      where: { id },
-    });
-    if (matchObject === null) {
-      throw new Error(`Match not found or doesn't exist`);
-    }
 
     //find the match waiting list id
     const matchWaitingListId =
@@ -266,7 +206,7 @@ export class MatchService {
       },
     });
 
-    return this.parseToZodObject(updateMatch);
+    return parseToZodObject(updateMatch);
   }
 
   async updateMatch(params: UpdateMatchDto): Promise<MatchInterface> {
@@ -303,12 +243,12 @@ export class MatchService {
       },
     });
 
-    return this.parseToZodObject(match);
+    return parseToZodObject(match);
   }
 
   async deleteMatch(params: DeleteMatchDto): Promise<MatchInterface> {
     const { id } = params;
-    return this.parseToZodObject(
+    return parseToZodObject(
       await this.matchRepository.deleteMatch({ where: { id } })
     );
   }
@@ -317,12 +257,40 @@ export class MatchService {
     return this.matchMessageApi.sendMessage(sender, match, message);
   }
 
-  private parseToZodObject(match: Match) {
-    const { matchStartDate, matchEndDate, ...matchObject } = match;
-    return {
-      ...matchObject,
-      matchStartDate: matchStartDate?.toISOString(),
-      matchEndDate: matchEndDate?.toISOString(),
-    };
-  }
+  private checkIfMonsterIsNotTheSameOnMatch = async (
+    matchId: number,
+    monsterId: number
+  ) => {
+    const match = await this.matchRepository.getMatch({
+      where: { id: matchId },
+    });
+    if (match?.fk_monster_1 === monsterId) {
+      throw new Error(`Is actually the same monster in the match`);
+    }
+  };
+
+  private checkIfMonsterIsNotInTheWaitingListOfTheMatch = async (
+    matchId: number,
+    monsterId: number
+  ) => {
+    try {
+      const currentWaitingList = await this.matchRepository.getMatchWaitingList(
+        {
+          where: {
+            Match: {
+              id: matchId,
+            },
+            Monster: {
+              id: monsterId,
+            },
+          },
+        }
+      );
+      if (currentWaitingList.length > 0) {
+        throw new Error(`Monster is already in the waiting list of the match`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
 }
