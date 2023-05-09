@@ -63,7 +63,12 @@ export class MatchController {
   }
 
   // Fermer un match
+  //-> Ajoute le matchEndedAt
   //-> Changer le MMR des Monsters
+  @Patch("close/:id")
+  async closeMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
+    return this.matchService.closeMatch({ id: +id });
+  }
 
   //Permet d'envoyer des messages à l'intérieur du Loby d'un match
   // @Post(":id/message")

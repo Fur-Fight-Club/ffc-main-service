@@ -6,6 +6,7 @@ import { handleMatchMessageError } from "src/utils/error/match.error";
 import { parseToZodObject } from "src/utils/match.utils";
 import { MatchRepository } from "./match.repository";
 import {
+  CloseMatchDto,
   CreateMatchDto,
   DeleteMatchDto,
   GetMatchDto,
@@ -272,6 +273,27 @@ export class MatchService {
     }
   }
 
+  async closeMatch(params: CloseMatchDto): Promise<MatchInterface> {
+    try {
+      const { id } = params;
+
+      await this.checkIfMatchIsNotAlreadyClosed(id);
+
+      const match = await this.matchRepository.updateMatch({
+        where: {
+          id,
+        },
+        data: {
+          matchEndDate: new Date(),
+        },
+      });
+
+      return parseToZodObject(match);
+    } catch (error) {
+      handleMatchMessageError(error);
+    }
+  }
+
   async sendMessage(sender: number, match: number, message: string) {
     return this.matchMessageApi.sendMessage(sender, match, message);
   }
@@ -313,6 +335,19 @@ export class MatchService {
       );
       if (currentWaitingList.length > 0) {
         throw new Error(`Monster is already in the waiting list of the match`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  private checkIfMatchIsNotAlreadyClosed = async (matchId: number) => {
+    try {
+      const match = await this.matchRepository.getMatch({
+        where: { id: matchId },
+      });
+      if (match?.matchEndDate !== null) {
+        throw new ConflictException(`Match is already closed`);
       }
     } catch (error) {
       throw error;

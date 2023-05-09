@@ -45,6 +45,10 @@ const deleteMatchSchema = matchSchema.pick({
   id: true,
 });
 
+const closeMatchSchema = matchSchema.pick({
+  id: true,
+});
+
 export type MatchInterface = z.infer<typeof matchSchema>;
 
 export class CreateMatchDto extends createZodDto(createMatchSchema) {}
@@ -54,6 +58,8 @@ export class GetMatchDto extends createZodDto(getMatchSchema) {}
 export class UpdateMatchDto extends createZodDto(updateMatchSchema) {}
 
 export class DeleteMatchDto extends createZodDto(deleteMatchSchema) {}
+
+export class CloseMatchDto extends createZodDto(closeMatchSchema) {}
 
 /*
     MATCH WAITING LIST
