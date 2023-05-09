@@ -1,7 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
+import { handleMatchMessageError } from "src/utils/error/match.error";
 import { parseToZodObject } from "src/utils/match.utils";
 import { MatchRepository } from "./match.repository";
 import {
@@ -105,7 +106,7 @@ export class MatchService {
 
       return parseToZodObject(match);
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
@@ -284,7 +285,9 @@ export class MatchService {
         where: { id: matchId },
       });
       if (match?.fk_monster_1 === monsterId) {
-        throw new Error(`Is actually the same monster in the match`);
+        throw new ConflictException(
+          `Is actually the same monster in the match`
+        );
       }
     } catch (error) {
       throw error;

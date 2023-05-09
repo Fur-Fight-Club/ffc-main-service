@@ -1,56 +1,26 @@
-import { Injectable } from "@nestjs/common";
-import { MatchRepository } from "src/match/match.repository";
-import { MonsterRepository } from "src/monster/monster.repository";
-import { PrismaService } from "src/services/prisma.service";
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 
-@Injectable()
-export class MatchError {
-  constructor(
-    private matchRepository: MatchRepository,
-    private monsterRepository: MonsterRepository,
-    private readonly prisma: PrismaService
-  ) {}
-
-  private getMatch = (matchId: number) => {
-    return this.matchRepository.getMatch({ where: { id: matchId } });
-  };
-
-  private getMonster = async (monsterId: number) => {
-    return await this.monsterRepository.getMonster({
-      where: { id: monsterId },
-    });
-  };
-
-  checkIfMatchExists = async (matchId: number) => {
-    const match = this.getMatch(matchId);
-    if (match === null) {
-      throw new Error(`Match not found or doesn't exist`);
-    }
-  };
-
-  checkIfMonsterExists = async (monsterId: number) => {
-    const monster = this.getMonster(monsterId);
-    if (monster === null) {
-      throw new Error(`Monster not found or doesn't exist`);
-    }
-  };
-
-  checkIfMonsterIsNotInTheWaitingListOfTheMatch = async (
-    matchId: number,
-    monsterId: number
-  ) => {
-    const currentWaitingList = await this.matchRepository.getMatchWaitingList({
-      where: {
-        Match: {
-          id: matchId,
-        },
-        Monster: {
-          id: monsterId,
-        },
-      },
-    });
-    if (currentWaitingList.length > 0) {
-      throw new Error(`Monster is already in the waiting list of the match`);
-    }
-  };
+export enum MatchMessageError {
+  NO_MONSTER_FOUND = "No 'Monster' record(s) (needed to inline the relation on 'MatchWaitingList' record(s)) was found for a nested connect on one-to-many relation 'MatchWaitingListToMonster'.",
+  NO_MATCH_FOUND = "No 'Match' record (needed to inline the relation on 'MatchWaitingList' record) was found for a nested create on one-to-many relation 'MatchToMatchWaitingList'.",
+  MONSTER_IS_ALREADY_IN_THE_WAITING_LIST = "Monster is already in the waiting list",
 }
+
+export const handleMatchMessageError = (error: { meta: { cause: string } }) => {
+  if (error.meta) {
+    switch (error.meta.cause) {
+      case MatchMessageError.NO_MONSTER_FOUND:
+        throw new NotFoundException("No monster found for this id");
+      case MatchMessageError.NO_MATCH_FOUND:
+        throw new NotFoundException("No match found for this id");
+
+      default:
+        throw new InternalServerErrorException(error.meta.cause);
+    }
+  } else {
+    throw new InternalServerErrorException(String(error));
+  }
+};

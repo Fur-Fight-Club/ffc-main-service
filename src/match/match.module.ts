@@ -8,7 +8,6 @@ import { NotificationsApiProvider } from "src/api/notifications/notifications.se
 import { AuthService } from "src/auth/auth.service";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
-import { MatchError } from "src/utils/error/match.error";
 import { MatchController } from "./match.controller";
 import { MatchRepository } from "./match.repository";
 import { MatchService } from "./match.service";
@@ -25,7 +24,6 @@ import { MatchService } from "./match.service";
     PrismaService,
     MatchRepository,
     MonsterRepository,
-    MatchError,
   ],
 })
 export class MatchModule {}
