@@ -1,0 +1,109 @@
+import { createZodDto } from "nestjs-zod";
+import { z } from "nestjs-zod/z";
+
+const weightCategoryEnumSchema = z.enum([
+  "A_FINE_BOI",
+  "HE_CHOMNK",
+  "A_HECKING_CHONKER",
+  "HEFTY_CHONK",
+  "MEGA_CHONKER",
+  "OH_LAWD_HE_COMIN",
+]);
+
+const matchSchema = z.object({
+  id: z.number().int(),
+  monster1: z.number().int(),
+  monster2: z.number().int(),
+  fk_arena: z.number().int(),
+  matchStartDate: z.dateString(),
+  matchEndDate: z.dateString(),
+  weight_category: weightCategoryEnumSchema,
+});
+
+const createMatchSchema = matchSchema.pick({
+  monster1: true,
+  fk_arena: true,
+  matchStartDate: true,
+  weight_category: true,
+});
+
+const getMatchSchema = matchSchema.pick({
+  id: true,
+});
+
+const updateMatchSchema = matchSchema.pick({
+  id: true,
+  fk_arena: true,
+  monster1: true,
+  monster2: true,
+  matchStartDate: true,
+  matchEndDate: true,
+  weight_category: true,
+});
+
+const deleteMatchSchema = matchSchema.pick({
+  id: true,
+});
+
+const closeMatchSchema = matchSchema.pick({
+  id: true,
+});
+
+export type MatchInterface = z.infer<typeof matchSchema>;
+
+export class CreateMatchDto extends createZodDto(createMatchSchema) {}
+
+export class GetMatchDto extends createZodDto(getMatchSchema) {}
+
+export class UpdateMatchDto extends createZodDto(updateMatchSchema) {}
+
+export class DeleteMatchDto extends createZodDto(deleteMatchSchema) {}
+
+export class CloseMatchDto extends createZodDto(closeMatchSchema) {}
+
+/*
+    MATCH WAITING LIST
+*/
+const statusEnumSchema = z.enum(["ACCEPTED", "REJECTED", "PENDING"]);
+
+const matchWaitingListSchema = z.object({
+  id: z.number().int(),
+  monster: z.number().int(),
+  match: z.number().int(),
+  status: statusEnumSchema,
+});
+
+const joinMatchWaitingListSchema = matchWaitingListSchema.pick({
+  id: true,
+  monster: true,
+});
+const createMatchWaitingListSchema = matchWaitingListSchema.pick({
+  monster: true,
+});
+
+const validateMatchWaitingListControllerSchema = matchWaitingListSchema.pick({
+  monster: true,
+});
+
+const validateMatchWaitingListSerivceSchema = matchWaitingListSchema.pick({
+  id: true,
+  monster: true,
+});
+
+export type StatusEnum = z.infer<typeof statusEnumSchema>;
+
+export class CreateMatchWaitingListDto extends createZodDto(
+  createMatchWaitingListSchema
+) {}
+
+export class JoinMatchWaitingListDto extends createZodDto(
+  joinMatchWaitingListSchema
+) {}
+
+export class ValidateMatchWaitingListControllerDto extends createZodDto(
+  validateMatchWaitingListControllerSchema
+) {}
+
+export class ValidateMatchWaitingListServiceDto extends createZodDto(
+  validateMatchWaitingListSerivceSchema
+) {}

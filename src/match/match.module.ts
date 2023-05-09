@@ -1,13 +1,16 @@
 import { Module } from "@nestjs/common";
-import { MatchService } from "./match.service";
-import { MatchController } from "./match.controller";
 import { ConfigModule } from "@nestjs/config";
-import { NotificationsModule } from "src/api/notifications/notifications.module";
-import { NotificationsApiProvider } from "src/api/notifications/notifications.service";
-import { MatchMessageApiProvider } from "src/api/notifications/match-message/match-message.service";
 import { AuthModule } from "src/api/auth/auth.module";
 import { AuthApiProvider } from "src/api/auth/auth.service";
+import { MatchMessageApiProvider } from "src/api/notifications/match-message/match-message.service";
+import { NotificationsModule } from "src/api/notifications/notifications.module";
+import { NotificationsApiProvider } from "src/api/notifications/notifications.service";
 import { AuthService } from "src/auth/auth.service";
+import { MonsterRepository } from "src/monster/monster.repository";
+import { PrismaService } from "src/services/prisma.service";
+import { MatchController } from "./match.controller";
+import { MatchRepository } from "./match.repository";
+import { MatchService } from "./match.service";
 
 @Module({
   imports: [ConfigModule, NotificationsModule, AuthModule],
@@ -18,6 +21,9 @@ import { AuthService } from "src/auth/auth.service";
     AuthApiProvider,
     NotificationsApiProvider,
     MatchMessageApiProvider,
+    PrismaService,
+    MatchRepository,
+    MonsterRepository,
   ],
 })
 export class MatchModule {}
