@@ -44,7 +44,7 @@ export class MatchService {
 
       return parseToZodObject(match);
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
@@ -76,7 +76,7 @@ export class MatchService {
 
       return parseToZodObject(match);
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
@@ -167,7 +167,7 @@ export class MatchService {
 
       return parseToZodObject(match);
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
@@ -194,7 +194,7 @@ export class MatchService {
         throw new Error(`Monster is not in the queue or match doesn't exist`);
       }
       if (matchWaitingListId.status === `ACCEPTED`) {
-        throw new Error(`Monster is already accepted in the match`);
+        throw new Error(`Monster is already rejected in the match`);
       }
 
       //update the match waiting list status
@@ -216,7 +216,7 @@ export class MatchService {
 
       return parseToZodObject(updateMatch);
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
@@ -257,7 +257,7 @@ export class MatchService {
 
       return parseToZodObject(match);
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
@@ -268,7 +268,7 @@ export class MatchService {
         await this.matchRepository.deleteMatch({ where: { id } })
       );
     } catch (error) {
-      throw error;
+      handleMatchMessageError(error);
     }
   }
 
