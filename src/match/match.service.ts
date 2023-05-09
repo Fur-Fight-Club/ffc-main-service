@@ -265,9 +265,8 @@ export class MatchService {
   async deleteMatch(params: DeleteMatchDto): Promise<MatchInterface> {
     try {
       const { id } = params;
-      return parseToZodObject(
-        await this.matchRepository.deleteMatch({ where: { id } })
-      );
+      const match = await this.matchRepository.deleteMatch({ where: { id } });
+      return parseToZodObject(match);
     } catch (error) {
       handleMatchMessageError(error);
     }

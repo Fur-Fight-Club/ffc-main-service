@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -26,7 +27,7 @@ import {
 import { MatchService } from "./match.service";
 
 @Controller("match")
-@UseGuards(UserGuard)
+// @UseGuards(UserGuard)
 @ApiTags("Match Controller")
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
@@ -73,6 +74,11 @@ export class MatchController {
   @Patch("close/:id")
   async closeMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
     return this.matchService.closeMatch({ id: +id });
+  }
+
+  @Delete("delete/:id")
+  async deleteMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
+    return this.matchService.deleteMatch({ id: +id });
   }
 
   //Permet d'envoyer des messages à l'intérieur du Loby d'un match
