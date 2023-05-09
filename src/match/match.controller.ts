@@ -6,9 +6,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
+  UseGuards,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
 import { ZodValidationPipe } from "nestjs-zod";
+import {
+  CreateMessageApiBody,
+  CreateMessageDto,
+} from "src/api/notifications/match-message/match-message.interface";
+import { UserGuard } from "src/auth/auth-user.guard";
+import { JWTUserRequest } from "src/auth/auth.model";
 import {
   CreateMatchDto,
   CreateMatchWaitingListDto,
@@ -18,7 +26,7 @@ import {
 import { MatchService } from "./match.service";
 
 @Controller("match")
-// @UseGuards(UserGuard)
+@UseGuards(UserGuard)
 @ApiTags("Match Controller")
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
@@ -62,31 +70,28 @@ export class MatchController {
     return this.matchService.rejectWaitingListMatch({ ...data, id: +id });
   }
 
-  // Fermer un match
-  //-> Ajoute le matchEndedAt
-  //-> Changer le MMR des Monsters
   @Patch("close/:id")
   async closeMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
     return this.matchService.closeMatch({ id: +id });
   }
 
   //Permet d'envoyer des messages à l'intérieur du Loby d'un match
-  // @Post(":id/message")
-  // @UseGuards(UserGuard)
-  // @ApiBody({
-  //   description: "Send a message to a match",
-  //   type: CreateMessageApiBody,
-  // })
-  // @ApiParam({
-  //   name: "id",
-  //   description: "Match id",
-  //   type: "number",
-  // })
-  // sendMessage(
-  //   @Body(ZodValidationPipe) body: CreateMessageDto,
-  //   @Request() request: JWTUserRequest,
-  //   @Param("id") id: number
-  // ) {
-  //   return this.matchService.sendMessage(request.user.sub, id, body.message);
-  // }
+  @Post(":id/message")
+  @UseGuards(UserGuard)
+  @ApiBody({
+    description: "Send a message to a match",
+    type: CreateMessageApiBody,
+  })
+  @ApiParam({
+    name: "id",
+    description: "Match id",
+    type: "number",
+  })
+  sendMessage(
+    @Body(ZodValidationPipe) body: CreateMessageDto,
+    @Request() request: JWTUserRequest,
+    @Param("id") id: number
+  ) {
+    return this.matchService.sendMessage(request.user.sub, id, body.message);
+  }
 }
