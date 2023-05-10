@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
 import { z } from "nestjs-zod/z";
 
@@ -12,12 +13,12 @@ const weightCategoryEnumSchema = z.enum([
 
 const matchSchema = z.object({
   id: z.number().int(),
-  monster1: z.number().int(),
-  monster2: z.number().int(),
-  fk_arena: z.number().int(),
-  matchStartDate: z.dateString(),
-  matchEndDate: z.dateString(),
-  weight_category: weightCategoryEnumSchema,
+  monster1: z.number().int().describe("Monster 1 ID"),
+  monster2: z.number().int().describe("Monster 2 ID"),
+  fk_arena: z.number().int().describe("Arena ID"),
+  matchStartDate: z.dateString().describe("Match start date"),
+  matchEndDate: z.dateString().describe("Match end date"),
+  weight_category: weightCategoryEnumSchema.describe("Weight category"),
 });
 
 const createMatchSchema = matchSchema.pick({
@@ -51,7 +52,18 @@ const closeMatchSchema = matchSchema.pick({
 
 export type MatchInterface = z.infer<typeof matchSchema>;
 
-export class CreateMatchDto extends createZodDto(createMatchSchema) {}
+export type WeightCategoryEnum = z.infer<typeof weightCategoryEnumSchema>;
+
+export class CreateMatchDto extends createZodDto(createMatchSchema) {
+  @ApiProperty({ type: "number", format: "int32" })
+  monster1: number;
+  @ApiProperty({ type: "number", format: "int32" })
+  fk_arena: number;
+  @ApiProperty({ type: "string", format: "date-time" })
+  matchStartDate: string;
+  @ApiProperty({ enum: weightCategoryEnumSchema.enum })
+  weight_category: WeightCategoryEnum;
+}
 
 export class GetMatchDto extends createZodDto(getMatchSchema) {}
 

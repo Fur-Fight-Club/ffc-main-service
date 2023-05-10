@@ -38,6 +38,7 @@ export class MatchController {
   }
 
   @Get(":id")
+  @ApiParam({ name: "id", description: "Match id", type: Number })
   async getOne(@Param("id", ParseIntPipe) id: GetMatchDto) {
     return this.matchService.getMatch({ id: +id });
   }
@@ -48,6 +49,7 @@ export class MatchController {
   }
 
   @Patch("join/:id")
+  @ApiParam({ name: "id", description: "Match id", type: Number })
   async joinWaitingList(
     @Param("id", ParseIntPipe) id: GetMatchDto,
     @Body(ZodValidationPipe) data: CreateMatchWaitingListDto
@@ -56,6 +58,7 @@ export class MatchController {
   }
 
   @Patch("join/validate/:id")
+  @ApiParam({ name: "id", description: "Match id", type: Number })
   async validateWaitingList(
     @Param("id", ParseIntPipe) id: GetMatchDto,
     @Body(ZodValidationPipe) data: ValidateMatchWaitingListControllerDto
@@ -64,6 +67,7 @@ export class MatchController {
   }
 
   @Patch("join/reject/:id")
+  @ApiParam({ name: "id", description: "Match id", type: Number })
   async rejectWaitingListMatch(
     @Param("id", ParseIntPipe) id: GetMatchDto,
     @Body(ZodValidationPipe) data: ValidateMatchWaitingListControllerDto
@@ -72,11 +76,13 @@ export class MatchController {
   }
 
   @Patch("close/:id")
+  @ApiParam({ name: "id", description: "Match id", type: Number })
   async closeMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
     return this.matchService.closeMatch({ id: +id });
   }
 
   @Delete("delete/:id")
+  @ApiParam({ name: "id", type: Number })
   async deleteMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
     return this.matchService.deleteMatch({ id: +id });
   }
