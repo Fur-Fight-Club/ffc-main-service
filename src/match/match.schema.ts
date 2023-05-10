@@ -67,7 +67,22 @@ export class CreateMatchDto extends createZodDto(createMatchSchema) {
 
 export class GetMatchDto extends createZodDto(getMatchSchema) {}
 
-export class UpdateMatchDto extends createZodDto(updateMatchSchema) {}
+export class UpdateMatchDto extends createZodDto(updateMatchSchema) {
+  @ApiProperty({ type: "number", format: "int32" })
+  id: number;
+  @ApiProperty({ type: "number", format: "int32" })
+  fk_arena: number;
+  @ApiProperty({ type: "number", format: "int32" })
+  monster1: number;
+  @ApiProperty({ type: "number", format: "int32" })
+  monster2: number;
+  @ApiProperty({ type: "string", format: "date-time" })
+  matchStartDate: string;
+  @ApiProperty({ type: "string", format: "date-time" })
+  matchEndDate: string;
+  @ApiProperty({ enum: weightCategoryEnumSchema.enum })
+  weight_category: WeightCategoryEnum;
+}
 
 export class DeleteMatchDto extends createZodDto(deleteMatchSchema) {}
 
@@ -114,7 +129,10 @@ export class JoinMatchWaitingListDto extends createZodDto(
 
 export class ValidateMatchWaitingListControllerDto extends createZodDto(
   validateMatchWaitingListControllerSchema
-) {}
+) {
+  @ApiProperty({ enum: statusEnumSchema.enum })
+  status: StatusEnum;
+}
 
 export class ValidateMatchWaitingListServiceDto extends createZodDto(
   validateMatchWaitingListSerivceSchema
