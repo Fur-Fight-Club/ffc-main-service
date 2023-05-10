@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
@@ -21,6 +22,6 @@ export const handleMatchMessageError = (error: { meta: { cause: string } }) => {
         throw new InternalServerErrorException(error.meta.cause);
     }
   } else {
-    throw new InternalServerErrorException(String(error));
+    throw new BadRequestException(String(error));
   }
 };
