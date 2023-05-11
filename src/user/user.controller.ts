@@ -1,5 +1,12 @@
-import { Body, Controller, Post } from "@nestjs/common";
-import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
   LoginRequest,
   LoginResponse,
@@ -7,6 +14,8 @@ import {
   UserResponse,
 } from "src/api/auth/user/user.schema";
 import { UserService } from "./user.service";
+import { JWTUserRequest } from "src/auth/auth.model";
+import { UserGuard } from "src/auth/auth-user.guard";
 
 @Controller("user")
 @ApiTags("User controller")
@@ -37,5 +46,16 @@ export class UserController {
   @Post("register")
   async register(@Body() body: RegisterRequest) {
     return await this.userService.register(body);
+  }
+
+  @Get("me")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: "L'utilisateur est retourné",
+    type: UserResponse,
+  })
+  async getMe(@Request() request: JWTUserRequest) {
+    return await this.userService.getMe(request.user.sub);
   }
 }
