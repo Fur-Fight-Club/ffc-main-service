@@ -35,7 +35,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # project
-package-lock.json
 .env
 
 *.pem
