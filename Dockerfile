@@ -1,18 +1,21 @@
-# Image source
-FROM node:20
+# Étape 1 : Utiliser une image de base légère avec Node.js
+FROM node:18-alpine
 
-# Docker working directory
+# Étape 2 : Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Copying file into APP directory of docker
-COPY package*.json .
+# Étape 3 : Copier les fichiers package.json et package-lock.json dans le conteneur
+COPY package*.json ./
 
-# Copy current directory to APP folder
+# Étape 4 : Installer les dépendances de l'application
+RUN npm install
+
+# Étape 5 : Copier les fichiers source de l'application dans le conteneur
 COPY . .
 
-COPY ./.env ./.env
-
+# Étape 6 : Exposer le port utilisé par l'application (par exemple, 3000)
 EXPOSE 4000
 EXPOSE 5432
 
-CMD ["npm", "run", "start:dev"]
+# Étape 7 : Commande pour démarrer l'application
+CMD [ "npm", "run", "start:prod" ]
