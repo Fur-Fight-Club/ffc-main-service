@@ -33,6 +33,10 @@ jobs:
     - name: 🌐 Set up Cloud SDK
       uses: 'google-github-actions/setup-gcloud@v1'
 
+    - name: 📦 Install GKE auth plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+
     - name: 🔐 Get GKE credentials
       uses: 'google-github-actions/get-gke-credentials@v1'
       with:
