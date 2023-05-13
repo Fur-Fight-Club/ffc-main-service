@@ -12,6 +12,10 @@ jobs:
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v2
+
+    - name: 🔨 Build .env from GitHub secrets
+      run: |
+        echo ${{ secrets.ENV }} > .env
     
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
