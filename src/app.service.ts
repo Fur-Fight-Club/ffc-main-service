@@ -10,6 +10,7 @@ export class AppService {
       server_status: HttpStatus.OK,
       prisma_status: await this.prismaHealthcheck(),
       timestamp: new Date(),
+      service_name: "ffc-main-service",
     };
   }
 
