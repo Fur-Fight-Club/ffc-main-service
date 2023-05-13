@@ -13,9 +13,12 @@ RUN npm install
 # Étape 5 : Copier les fichiers source de l'application dans le conteneur
 COPY . .
 
-# Étape 6 : Exposer le port utilisé par l'application (par exemple, 3000)
+# Étape 7 : Build le projet
+RUN npm run build
+
+# Étape 8 : Exposer le port utilisé par l'application (par exemple, 3000)
 EXPOSE 4000
 EXPOSE 5432
 
-# Étape 7 : Commande pour démarrer l'application
+# Étape 9 : Commande pour démarrer l'application
 CMD [ "npm", "run", "start:prod" ]
