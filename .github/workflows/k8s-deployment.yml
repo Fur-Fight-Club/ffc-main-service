@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -32,6 +32,12 @@ jobs:
 
     - name: 🌐 Set up Cloud SDK
       uses: 'google-github-actions/setup-gcloud@v1'
+
+    - name: 🔐 Get GKE credentials
+      uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          cluster_name: 'fury-fight-club'
+          location: 'europe-west1'
     
     - name: ⚙️ Configure Docker credentials for GCR
       run: gcloud auth configure-docker
