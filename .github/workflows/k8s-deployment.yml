@@ -25,11 +25,13 @@ jobs:
     - name: 🔨 Build and push Docker image
       run: docker buildx build --push --tag mcamus9/ffc-main-docker .
     
-    - name: 🌐 Set up Google Cloud CLI
-      uses: google-github-actions/setup-gcloud@v0.3.0
+    - name: 🔐 Login to GCP
+      uses: google-github-actions/auth@v1
       with:
-        version: '343.0.0'
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+    - name: 🌐 Set up Cloud SDK
+      uses: 'google-github-actions/setup-gcloud@v1'
     
     - name: ⚙️ Configure Docker credentials for GCR
       run: gcloud auth configure-docker
