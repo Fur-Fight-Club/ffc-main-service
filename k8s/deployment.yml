@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ffc-main-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ffc-main
+  template:
+    metadata:
+      labels:
+        app: ffc-main
+    spec:
+      containers:
+        - name: ffc-main
+          image: mcamus9/ffc-main-docker
+          ports:
+            - containerPort: 4000
