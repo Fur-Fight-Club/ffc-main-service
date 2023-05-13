@@ -35,9 +35,9 @@ jobs:
 
     - name: 🔐 Get GKE credentials
       uses: 'google-github-actions/get-gke-credentials@v1'
-        with:
-          cluster_name: 'fury-fight-club'
-          location: 'europe-west1'
+      with:
+        cluster_name: 'fury-fight-club'
+        location: 'europe-west1'
     
     - name: ⚙️ Configure Docker credentials for GCR
       run: gcloud auth configure-docker
