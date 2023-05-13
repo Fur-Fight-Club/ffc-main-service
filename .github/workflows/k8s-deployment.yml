@@ -15,7 +15,9 @@ jobs:
 
     - name: 🔨 Build .env from GitHub secrets
       run: |
-        echo ${{ secrets.ENV }} > .env
+        echo ${{ secrets.ENV }} >> .env
+        cat .env
+        ls -la
     
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
