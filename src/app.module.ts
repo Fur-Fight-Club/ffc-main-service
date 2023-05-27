@@ -14,6 +14,7 @@ import { PaymentsModule } from "./payments/payments.module";
 import { ArenasModule } from "./arenas/arenas.module";
 import { WalletModule } from './wallet/wallet.module';
 import { BankAccountModule } from './bank-account/bank-account.module';
+import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BankAccountModule } from './bank-account/bank-account.module';
     ArenasModule,
     WalletModule,
     BankAccountModule,
+    PushNotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
