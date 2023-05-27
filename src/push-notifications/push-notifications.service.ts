@@ -22,4 +22,21 @@ export class PushNotificationsService {
       userId
     );
   }
+  async updateActiveStatus(token: string, active: boolean) {
+    return await this.pushNotificationsApi.updateActiveStatus(token, active);
+  }
+
+  async sendNotificationToUser(
+    userId: number,
+    title: string,
+    body: string,
+    data: any
+  ) {
+    return await this.pushNotificationsApi.sendNotificationToUser(
+      userId,
+      title,
+      body,
+      data
+    );
+  }
 }

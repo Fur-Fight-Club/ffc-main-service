@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -11,6 +12,8 @@ import { ZodValidationPipe } from "nestjs-zod";
 import {
   UpsertNotificationTokenDto,
   DeleteNotificationTokenDto,
+  UpdateActiveStatusDto,
+  SendPushNotificationDto,
 } from "src/api/notifications/push-notifications/push-notifications.schema";
 import { UserGuard } from "src/auth/auth-user.guard";
 import { Roles } from "src/decorators/roles.decorator";
@@ -47,5 +50,32 @@ export class PushNotificationsController {
   ) {
     const { token } = body;
     return await this.pushNotificationsService.deleteNotificationToken(token);
+  }
+
+  @Patch("active")
+  @Roles("USER", "MONSTER_OWNER", "ADMIN")
+  async updateActiveStatus(
+    @Body(ZodValidationPipe) body: UpdateActiveStatusDto
+  ) {
+    const { token, active } = body;
+    return await this.pushNotificationsService.updateActiveStatus(
+      token,
+      active
+    );
+  }
+
+  @Post("send")
+  @Roles("ADMIN")
+  async sendNotificationToUser(
+    @Body(ZodValidationPipe) body: SendPushNotificationDto,
+    @Request() req: JWTUserRequest
+  ) {
+    const { title, body: message, data } = body;
+    return await this.pushNotificationsService.sendNotificationToUser(
+      req.user.sub,
+      title,
+      message,
+      data
+    );
   }
 }
