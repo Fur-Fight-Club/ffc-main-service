@@ -7,7 +7,12 @@ import {
 } from "@nestjs/common";
 import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 import { AuthApi } from "../auth.interface";
-import { ConfirmAccountResponse, UserApi, UserInterface } from "./user.schema";
+import {
+  ConfirmAccountResponse,
+  UpdateUserDto,
+  UserApi,
+  UserInterface,
+} from "./user.schema";
 
 @Injectable()
 class UserApiImpl implements UserApi {
@@ -113,6 +118,21 @@ class UserApiImpl implements UserApi {
     const response = await handleApiResponse<UserInterface>(
       await this.authApi.fetch(`user/${id}`, {
         method: "GET",
+      })
+    );
+
+    checkApiResponse(response, {
+      404: () => new NotFoundException("Can find this user"),
+    });
+
+    return response;
+  }
+
+  async updateById(userInterface: UpdateUserDto): Promise<UpdateUserDto> {
+    const response = await handleApiResponse<UserInterface>(
+      await this.authApi.fetch(`user/${userInterface.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(userInterface),
       })
     );
 
