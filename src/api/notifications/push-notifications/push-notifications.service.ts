@@ -52,6 +52,33 @@ class PushNotificationsImpl implements PushNotificationsApi {
 
     return response;
   }
+
+  async updateActiveStatus(
+    token: string,
+    active: boolean
+  ): Promise<NotificationSettings> {
+    const response = await handleApiResponse<NotificationSettings>(
+      await this.notificationsApi.fetch(`push-notifications`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          token,
+          active,
+        }),
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+  sendNotificationToUser(
+    userId: number,
+    title: string,
+    body: string,
+    data: any
+  ): Promise<boolean[]> {
+    throw new Error("Method not implemented.");
+  }
 }
 
 export const PushNotificationsApiProvider: Provider = {

@@ -7,12 +7,28 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "nestjs-zod/z";
 
 export interface PushNotificationsApi {
+  sendNotificationToUser(
+    userId: number,
+    title: string,
+    body: string,
+    data: any
+  ): unknown;
   upsertNotificationToken(
     token: string,
     platform: string,
     userId: number
   ): Promise<NotificationSettings>;
   deleteNotificationToken(token: string): Promise<NotificationSettings>;
+  updateActiveStatus(
+    token: string,
+    active: boolean
+  ): Promise<NotificationSettings>;
+  sendNotificationToUser(
+    userId: number,
+    title: string,
+    body: string,
+    data: any
+  ): Promise<boolean[]>;
 }
 export const PushNotificationsApi = "PushNotificationsApi";
 
@@ -64,3 +80,57 @@ export class DeleteNotificationTokenDto extends createZodDto(
 export type DeleteNotificationTokenType = z.infer<
   typeof deleteNotificationToken
 >;
+
+/**
+ * UPDATE ACTIVE STATUS
+ */
+
+export const updateActiveStatus = z.object({
+  token: z.string(),
+  active: z.boolean(),
+});
+
+export class UpdateActiveStatusDto extends createZodDto(updateActiveStatus) {
+  @ApiProperty({
+    type: "string",
+  })
+  token: string;
+
+  @ApiProperty({
+    type: "boolean",
+  })
+  active: boolean;
+}
+
+export type UpdateActiveStatusType = z.infer<typeof updateActiveStatus>;
+
+/**
+ * SEND PUSH NOTIFICATION
+ */
+
+export const sendPushNotification = z.object({
+  title: z.string(),
+  body: z.string(),
+  data: z.any(),
+});
+
+export class SendPushNotificationDto extends createZodDto(
+  sendPushNotification
+) {
+  @ApiProperty({
+    type: "string",
+  })
+  title: string;
+
+  @ApiProperty({
+    type: "string",
+  })
+  body: string;
+
+  @ApiProperty({
+    type: "object",
+  })
+  data: any;
+}
+
+export type SendPushNotificationType = z.infer<typeof sendPushNotification>;
