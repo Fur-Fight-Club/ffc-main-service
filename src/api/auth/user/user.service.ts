@@ -122,6 +122,18 @@ class UserApiImpl implements UserApi {
 
     return response;
   }
+
+  async getAll(): Promise<UserInterface[]> {
+    const response = await handleApiResponse<UserInterface[]>(
+      await this.authApi.fetch(`user`, {
+        method: "GET",
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
 }
 
 export const UserApiProvider: Provider = {

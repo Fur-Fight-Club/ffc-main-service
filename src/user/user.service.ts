@@ -36,6 +36,14 @@ export class UserService {
     return user;
   }
 
+  async getById(id: number) {
+    return await this.userApi.getById(id);
+  }
+
+  async getAllUsers() {
+    return await this.userApi.getAll();
+  }
+
   private async sendConfirmationEmail(
     email: string,
     firstname: string,

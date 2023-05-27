@@ -81,6 +81,7 @@ export interface UserApi {
   askResetPassword(email: string): Promise<{ email_token: string }>;
   resetPassword(email_token: string, password: string): Promise<UserInterface>;
   getById(id: number): Promise<UserInterface>;
+  getAll(): Promise<UserInterface[]>;
 }
 
 export class LoginRequest {

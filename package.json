@@ -26,6 +26,7 @@
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
+    "cors": "^2.8.5",
     "ffc-prisma-package": "^2.10.1",
     "fs": "^0.0.1-security",
     "nestjs-zod": "^2.2.0",

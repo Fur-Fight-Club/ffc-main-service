@@ -1,4 +1,11 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from "@nestjs/common";
 import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
   LoginRequest,
@@ -37,5 +44,15 @@ export class UserController {
   @Post("register")
   async register(@Body() body: RegisterRequest) {
     return await this.userService.register(body);
+  }
+
+  @Get(":id")
+  async getOneUser(@Param("id", ParseIntPipe) id: number) {
+    return await this.userService.getById(id);
+  }
+
+  @Get()
+  async getAllUsers() {
+    return await this.userService.getAllUsers();
   }
 }
