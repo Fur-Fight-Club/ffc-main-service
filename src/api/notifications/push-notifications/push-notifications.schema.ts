@@ -23,7 +23,6 @@ export const PushNotificationsApi = "PushNotificationsApi";
 export const upsertNotificationToken = z.object({
   token: z.string(),
   platform: z.enum(["IOS", "ANDROID", "WEB"]),
-  userId: z.number().int(),
 });
 
 export class UpsertNotificationTokenDto extends createZodDto(
@@ -39,12 +38,6 @@ export class UpsertNotificationTokenDto extends createZodDto(
     enum: ["IOS", "ANDROID", "WEB"],
   })
   platform: "IOS" | "ANDROID" | "WEB";
-
-  @ApiProperty({
-    type: "number",
-    default: 1,
-  })
-  userId: number;
 }
 
 export type UpsertNotificationTokenType = z.infer<
