@@ -2,6 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -11,6 +14,7 @@ import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  UpdateRequest,
   UserResponse,
 } from "src/api/auth/user/user.schema";
 import { UserService } from "./user.service";
@@ -57,5 +61,19 @@ export class UserController {
   })
   async getMe(@Request() request: JWTUserRequest) {
     return await this.userService.getMe(request.user.sub);
+  }
+
+  @Patch("update")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: "L'utilisateur est retourné",
+    type: UserResponse,
+  })
+  async update(
+    @Request() request: JWTUserRequest,
+    @Body() body: UpdateRequest
+  ) {
+    return await this.userService.update({ ...body, id: +request.user.sub });
   }
 }

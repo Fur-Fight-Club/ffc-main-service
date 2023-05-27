@@ -6,6 +6,7 @@ import {
 import {
   LoginRequest,
   RegisterRequest,
+  UpdateRequest,
   UserApi,
 } from "src/api/auth/user/user.schema";
 import { EmailApi } from "src/api/notifications/mails/mails.schema";
@@ -73,5 +74,11 @@ export class UserService {
       user: user,
       ...userInfo,
     };
+  }
+
+  async update(updateRequest: UpdateRequest) {
+    const user = await this.userApi.updateById(updateRequest);
+
+    return user;
   }
 }

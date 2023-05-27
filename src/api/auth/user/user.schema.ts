@@ -1,3 +1,4 @@
+import { Optional } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
 import { z } from "nestjs-zod/z";
@@ -43,6 +44,19 @@ export class AskResetPasswordApiBody {
 }
 
 /**
+ * UPDATE USER
+ */
+export const updateUser = userSchema.pick({
+  id: true,
+  firstname: true,
+  lastname: true,
+  email: true,
+  password: true,
+});
+
+export class UpdateUserDto extends createZodDto(updateUser) {}
+
+/**
  * RESET PASSWORD TYPES
  */
 
@@ -81,6 +95,7 @@ export interface UserApi {
   askResetPassword(email: string): Promise<{ email_token: string }>;
   resetPassword(email_token: string, password: string): Promise<UserInterface>;
   getById(id: number): Promise<UserInterface>;
+  updateById(user: UpdateUserDto): Promise<UserInterface>;
 }
 
 export class LoginRequest {
@@ -98,6 +113,22 @@ export class RegisterRequest {
   @ApiProperty({ type: "string", format: "binary" })
   email: string;
   @ApiProperty({ type: "string", format: "binary" })
+  password: string;
+}
+
+export class UpdateRequest {
+  id: number;
+  @ApiProperty({ type: "string", format: "binary" })
+  @Optional()
+  firstname: string;
+  @ApiProperty({ type: "string", format: "binary" })
+  @Optional()
+  lastname: string;
+  @ApiProperty({ type: "string", format: "binary" })
+  @Optional()
+  email: string;
+  @ApiProperty({ type: "string", format: "binary" })
+  @Optional()
   password: string;
 }
 
