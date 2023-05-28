@@ -1,9 +1,9 @@
 import { Injectable, Provider } from "@nestjs/common";
-import { PaymentsApi } from "./payments.interface";
 import { ConfigService } from "@nestjs/config";
 import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
-import { prepareRequestUrl, prepareRequestInit } from "src/utils/api.utils";
 import { AuthService } from "src/auth/auth.service";
+import { prepareRequestInit, prepareRequestUrl } from "src/utils/api.utils";
+import { PaymentsApi } from "./payments.interface";
 
 @Injectable()
 class PaymentsApiImpl implements PaymentsApi {

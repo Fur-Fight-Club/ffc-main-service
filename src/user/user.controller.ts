@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -17,9 +18,9 @@ import {
   UpdateRequest,
   UserResponse,
 } from "src/api/auth/user/user.schema";
-import { UserService } from "./user.service";
-import { JWTUserRequest } from "src/auth/auth.model";
 import { UserGuard } from "src/auth/auth-user.guard";
+import { JWTUserRequest } from "src/auth/auth.model";
+import { UserService } from "./user.service";
 
 @Controller("user")
 @ApiTags("User controller")
@@ -75,5 +76,20 @@ export class UserController {
     @Body() body: UpdateRequest
   ) {
     return await this.userService.update({ ...body, id: +request.user.sub });
+  }
+
+  @Get(":id")
+  async getOneUser(@Param("id", ParseIntPipe) id: number) {
+    return await this.userService.getById(id);
+  }
+
+  @Get()
+  async getAllUsers() {
+    return await this.userService.getAllUsers();
+  }
+
+  @Delete(":id")
+  async removeUser(@Param("id", ParseIntPipe) id: number) {
+    return await this.userService.remove(id);
   }
 }
