@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { UserApi } from "src/api/auth/user/user.schema";
 import { EmailApi } from "src/api/notifications/mails/mails.schema";
 import {
+  BuyCreditHeaders,
   BuyCreditReturn,
   CreditsApi,
 } from "src/api/payments/credits/credits.interface";
@@ -14,10 +15,16 @@ export class CreditsService {
     @Inject(UserApi) private readonly usersApi: UserApi
   ) {}
 
-  async buyCredits(credits: string, userId: number): Promise<BuyCreditReturn> {
-    console.log(typeof credits, credits);
-
-    const buyCreditResponse = await this.creditsApi.buyCredits(userId, credits);
+  async buyCredits(
+    credits: string,
+    userId: number,
+    requestFrom: BuyCreditHeaders["x-request-from"]
+  ): Promise<BuyCreditReturn> {
+    const buyCreditResponse = await this.creditsApi.buyCredits(
+      userId,
+      credits,
+      requestFrom
+    );
 
     const userResponse = await this.usersApi.getById(userId);
 

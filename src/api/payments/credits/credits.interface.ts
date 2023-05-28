@@ -4,7 +4,11 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "nestjs-zod/z";
 
 export interface CreditsApi {
-  buyCredits(user: number, amount: string): Promise<BuyCreditReturn>;
+  buyCredits(
+    user: number,
+    amount: string,
+    requestFrom: BuyCreditHeaders["x-request-from"]
+  ): Promise<BuyCreditReturn>;
 }
 
 /**
@@ -58,6 +62,10 @@ export interface BuyCreditReturn {
   transaction: Transaction;
   invoice: Invoice;
   payment_url: string;
+}
+
+export interface BuyCreditHeaders {
+  "x-request-from": "ios" | "android" | "web";
 }
 
 export const CreditsApi = "CreditsApi";

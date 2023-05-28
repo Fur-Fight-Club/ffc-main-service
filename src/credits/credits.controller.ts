@@ -1,8 +1,18 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
 import { CreditsService } from "./credits.service";
 import { ApiTags, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { ZodValidationPipe } from "nestjs-zod";
-import { BuyCreditDto } from "src/api/payments/credits/credits.interface";
+import {
+  BuyCreditDto,
+  BuyCreditHeaders,
+} from "src/api/payments/credits/credits.interface";
 import { JWTUserRequest } from "src/auth/auth.model";
 import { UserGuard } from "src/auth/auth-user.guard";
 
@@ -19,8 +29,13 @@ export class CreditsController {
   })
   async buyCredits(
     @Body(ZodValidationPipe) body: BuyCreditDto,
-    @Request() req: JWTUserRequest
+    @Request() req: JWTUserRequest,
+    @Headers() headers: BuyCreditHeaders
   ) {
-    return this.creditsService.buyCredits(body.credits, req.user.sub);
+    return this.creditsService.buyCredits(
+      body.credits,
+      req.user.sub,
+      headers["x-request-from"]
+    );
   }
 }
