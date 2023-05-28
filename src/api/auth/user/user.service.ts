@@ -124,6 +124,29 @@ class UserApiImpl implements UserApi {
     checkApiResponse(response, {
       404: () => new NotFoundException("Can find this user"),
     });
+    return response;
+  }
+
+  async getAll(): Promise<UserInterface[]> {
+    const response = await handleApiResponse<UserInterface[]>(
+      await this.authApi.fetch(`user`, {
+        method: "GET",
+      })
+    );
+    checkApiResponse(response);
+    return response;
+  }
+
+  async remove(id: number): Promise<UserInterface> {
+    const response = await handleApiResponse<UserInterface>(
+      await this.authApi.fetch(`user/${id}`, {
+        method: "DELETE",
+      })
+    );
+
+    checkApiResponse(response, {
+      404: () => new NotFoundException("Can find this user"),
+    });
 
     return response;
   }
