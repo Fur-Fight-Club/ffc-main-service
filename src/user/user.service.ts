@@ -44,6 +44,10 @@ export class UserService {
     return await this.userApi.getAll();
   }
 
+  async remove(id: number) {
+    return await this.userApi.remove(id);
+  }
+
   private async sendConfirmationEmail(
     email: string,
     firstname: string,

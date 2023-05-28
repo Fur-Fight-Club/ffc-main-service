@@ -82,6 +82,7 @@ export interface UserApi {
   resetPassword(email_token: string, password: string): Promise<UserInterface>;
   getById(id: number): Promise<UserInterface>;
   getAll(): Promise<UserInterface[]>;
+  remove(id: number): Promise<UserInterface>;
 }
 
 export class LoginRequest {
