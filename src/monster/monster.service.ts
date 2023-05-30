@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadGatewayException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import {
   CreateMonsterDto,
   GetMonsterDto,
@@ -6,10 +10,14 @@ import {
   UpdateMonsterDto,
 } from "./monster.schema";
 import { MonsterRepository } from "./monster.repository";
+import { ImageData, ImgurService } from "src/services/imgur.service";
 
 @Injectable()
 export class MonsterService {
-  constructor(private monsterRepository: MonsterRepository) {}
+  constructor(
+    private monsterRepository: MonsterRepository,
+    private readonly imgurService: ImgurService
+  ) {}
 
   async getMonsters(userId: number): Promise<MonsterDto[]> {
     const monsters = await this.monsterRepository.getMonsters({
@@ -37,8 +45,15 @@ export class MonsterService {
   }
 
   async createMonster(createMonsterDto: CreateMonsterDto): Promise<MonsterDto> {
-    const { name, weight, fk_user, weight_category, monster_type } =
+    const { name, weight, fk_user, weight_category, monster_type, picture } =
       createMonsterDto;
+
+    const imgurImage = await this.imgurService.uploadImage(picture);
+
+    if (!imgurImage.success) {
+      throw new BadGatewayException("Error while uploading image to imgur");
+    }
+
     const monster = await this.monsterRepository.createMonster({
       data: {
         name,
@@ -46,6 +61,7 @@ export class MonsterService {
         fk_user,
         weight_category,
         monster_type,
+        picture: imgurImage.link,
       },
     });
 
@@ -56,7 +72,9 @@ export class MonsterService {
     updateMonsterDto: UpdateMonsterDto,
     userId: number
   ): Promise<MonsterDto> {
-    const { name, weight, weight_category, monster_type } = updateMonsterDto;
+    const { name, weight, weight_category, monster_type, picture } =
+      updateMonsterDto;
+
     const monsterToBeUpdated = await this.monsterRepository.getMonster({
       where: {
         id: updateMonsterDto.id,
@@ -65,6 +83,17 @@ export class MonsterService {
 
     if (!monsterToBeUpdated || monsterToBeUpdated.fk_user !== userId) {
       throw new NotFoundException("Monster not found");
+    }
+
+    let imgurUpdatedImage: ImageData;
+    if (picture) {
+      const imgurImage = await this.imgurService.uploadImage(picture);
+
+      if (!imgurImage.success) {
+        throw new BadGatewayException("Error while uploading image to imgur");
+      }
+
+      imgurUpdatedImage = imgurImage;
     }
 
     const monster = await this.monsterRepository.updateMonster({
@@ -76,6 +105,7 @@ export class MonsterService {
         weight,
         weight_category,
         monster_type,
+        picture: picture ? imgurUpdatedImage.link : undefined,
       },
     });
 
