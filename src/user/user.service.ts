@@ -10,8 +10,8 @@ import {
   UserApi,
 } from "src/api/auth/user/user.schema";
 import { EmailApi } from "src/api/notifications/mails/mails.schema";
-import { UserRepository } from "./user.repository";
 import { UserWalletApi } from "src/api/payments/user/user.interface";
+import { UserRepository } from "./user.repository";
 
 @Injectable()
 export class UserService {

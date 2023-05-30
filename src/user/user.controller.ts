@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ZodValidationPipe } from "nestjs-zod";
 import {
   LoginRequest,
   LoginResponse,
@@ -64,18 +65,18 @@ export class UserController {
     return await this.userService.getMe(request.user.sub);
   }
 
-  @Patch("update")
-  @UseGuards(UserGuard)
+  @Patch(":id")
+  // @UseGuards(UserGuard)
   @ApiBearerAuth()
   @ApiResponse({
     description: "L'utilisateur est retourné",
     type: UserResponse,
   })
   async update(
-    @Request() request: JWTUserRequest,
-    @Body() body: UpdateRequest
+    @Param("id", ParseIntPipe) id: number,
+    @Body(ZodValidationPipe) body: UpdateRequest
   ) {
-    return await this.userService.update({ ...body, id: +request.user.sub });
+    return await this.userService.update({ ...body, id: +id });
   }
 
   @Get(":id")

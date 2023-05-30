@@ -151,16 +151,16 @@ class UserApiImpl implements UserApi {
     return response;
   }
 
-  async updateById(userInterface: UpdateUserDto): Promise<UpdateUserDto> {
+  async updateById(userInterface: any): Promise<UpdateUserDto> {
     const response = await handleApiResponse<UserInterface>(
       await this.authApi.fetch(`user/${userInterface.id}`, {
         method: "PATCH",
-        body: JSON.stringify(userInterface),
+        body: userInterface.body,
       })
     );
 
     checkApiResponse(response, {
-      404: () => new NotFoundException("Can find this user"),
+      404: () => new NotFoundException("Can't find this user"),
     });
 
     return response;
