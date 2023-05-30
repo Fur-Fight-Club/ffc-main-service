@@ -51,7 +51,7 @@ export const updateUser = userSchema.pick({
   firstname: true,
   lastname: true,
   email: true,
-  password: true,
+  role: true,
 });
 
 export class UpdateUserDto extends createZodDto(updateUser) {}
@@ -132,6 +132,9 @@ export class UpdateRequest {
   @ApiProperty({ type: "string", format: "binary" })
   @Optional()
   password: string;
+  @ApiProperty({ type: "string", format: "binary" })
+  @Optional()
+  role: UserRoleInterface;
 }
 
 export class UserResponse {
