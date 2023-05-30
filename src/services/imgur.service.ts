@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadGatewayException, Injectable } from "@nestjs/common";
 import { ImgurClient } from "imgur";
 
 @Injectable()
@@ -9,15 +9,19 @@ export class ImgurService {
   constructor() {}
 
   async uploadImage(base64: string): Promise<ImageData> {
-    const image = await this.imgurClient.upload({
-      type: "base64",
-      image: base64,
-    });
+    try {
+      const image = await this.imgurClient.upload({
+        type: "base64",
+        image: base64,
+      });
 
-    return {
-      success: image.success,
-      link: image.data.link,
-    };
+      return {
+        success: image.success,
+        link: image.data.link,
+      };
+    } catch (error) {
+      throw new BadGatewayException(error);
+    }
   }
 }
 
