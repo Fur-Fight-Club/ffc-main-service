@@ -51,7 +51,10 @@ export class MonsterService {
     const imgurImage = await this.imgurService.uploadImage(picture);
 
     if (!imgurImage.success) {
-      throw new BadGatewayException("Error while uploading image to imgur");
+      throw new BadGatewayException(
+        "Error while uploading image to imgur",
+        imgurImage.data
+      );
     }
 
     const monster = await this.monsterRepository.createMonster({
@@ -90,7 +93,10 @@ export class MonsterService {
       const imgurImage = await this.imgurService.uploadImage(picture);
 
       if (!imgurImage.success) {
-        throw new BadGatewayException("Error while uploading image to imgur");
+        throw new BadGatewayException(
+          "Error while uploading image to imgur",
+          imgurImage.data
+        );
       }
 
       imgurUpdatedImage = imgurImage;
