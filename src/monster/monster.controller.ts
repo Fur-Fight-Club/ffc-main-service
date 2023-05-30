@@ -57,6 +57,7 @@ export class MonsterController {
   @UseGuards(UserGuard)
   @Roles("USER", "ADMIN", "MONSTER_OWNER")
   @ApiBody({
+    description: "Create monster",
     type: CreateMonsterDto,
   })
   create(@Body(ZodValidationPipe) data: CreateMonsterDto) {
