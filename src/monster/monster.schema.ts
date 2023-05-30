@@ -32,6 +32,7 @@ export const monsterSchema = z.object({
   User: z.object({}),
   fk_user: z.number().int(),
   Fighter: z.array(z.number().int()),
+  picture: z.string(),
 });
 
 const createMonsterSchema = monsterSchema.pick({
@@ -40,6 +41,7 @@ const createMonsterSchema = monsterSchema.pick({
   fk_user: true,
   weight_category: true,
   monster_type: true,
+  picture: true,
 });
 
 const getMonsterSchema = monsterSchema.pick({
@@ -52,6 +54,7 @@ const updateMonsterSchema = monsterSchema.pick({
   weight: true,
   weight_category: true,
   monster_type: true,
+  picture: true,
 });
 
 export class CreateMonsterDto extends createZodDto(createMonsterSchema) {}
