@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   CreateMonsterDto,
   GetMonsterDto,
@@ -11,19 +11,27 @@ import { MonsterRepository } from "./monster.repository";
 export class MonsterService {
   constructor(private monsterRepository: MonsterRepository) {}
 
-  async getMonsters(): Promise<MonsterDto[]> {
-    const monsters = await this.monsterRepository.getMonsters({});
+  async getMonsters(userId: number): Promise<MonsterDto[]> {
+    const monsters = await this.monsterRepository.getMonsters({
+      where: {
+        fk_user: userId,
+      },
+    });
 
     return monsters;
   }
 
-  async getMonster(params: GetMonsterDto): Promise<MonsterDto> {
-    const { id } = params;
+  async getMonster(params: number, userId: number): Promise<MonsterDto> {
+    const id = params;
     const monster = await this.monsterRepository.getMonster({
       where: {
         id,
       },
     });
+
+    if (!monster || monster.fk_user !== userId) {
+      throw new NotFoundException("Monster not found");
+    }
 
     return monster;
   }
@@ -44,8 +52,21 @@ export class MonsterService {
     return monster;
   }
 
-  async updateMonster(updateMonsterDto: UpdateMonsterDto): Promise<MonsterDto> {
+  async updateMonster(
+    updateMonsterDto: UpdateMonsterDto,
+    userId: number
+  ): Promise<MonsterDto> {
     const { name, weight, weight_category, monster_type } = updateMonsterDto;
+    const monsterToBeUpdated = await this.monsterRepository.getMonster({
+      where: {
+        id: updateMonsterDto.id,
+      },
+    });
+
+    if (!monsterToBeUpdated || monsterToBeUpdated.fk_user !== userId) {
+      throw new NotFoundException("Monster not found");
+    }
+
     const monster = await this.monsterRepository.updateMonster({
       where: {
         id: updateMonsterDto.id,
@@ -61,8 +82,21 @@ export class MonsterService {
     return monster;
   }
 
-  async deleteMonster(params: GetMonsterDto): Promise<MonsterDto> {
+  async deleteMonster(
+    params: GetMonsterDto,
+    userId: number
+  ): Promise<MonsterDto> {
     const { id } = params;
+    const monsterToBeDeleted = await this.monsterRepository.getMonster({
+      where: {
+        id,
+      },
+    });
+
+    if (!monsterToBeDeleted || monsterToBeDeleted.fk_user !== userId) {
+      throw new NotFoundException("Monster not found");
+    }
+
     const monster = await this.monsterRepository.deleteMonster({
       where: {
         id,
