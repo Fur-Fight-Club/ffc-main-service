@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, Monster } from "ffc-prisma-package/dist/client";
+import { Prisma, Monster, Roles } from "ffc-prisma-package/dist/client";
 import { PrismaService } from "src/services/prisma.service";
 
 @Injectable()
@@ -34,7 +34,18 @@ export class MonsterRepository {
     data: Prisma.MonsterUncheckedCreateInput;
   }): Promise<Monster> {
     const { data } = params;
-    const { ...result } = await this.prisma.monster.create({ data });
+    const result = await this.prisma.monster.create({ data });
+
+    if (result) {
+      await this.prisma.user.update({
+        where: {
+          id: result.fk_user,
+        },
+        data: {
+          role: Roles.MONSTER_OWNER,
+        },
+      });
+    }
     return result;
   }
   async updateMonster(params: {
