@@ -14,7 +14,15 @@ export class MatchRepository {
     where: Prisma.MatchWhereUniqueInput;
   }): Promise<Match | null> {
     const { where } = params;
-    return this.prisma.match.findUnique({ where });
+    return this.prisma.match.findUnique({
+      where,
+      include: {
+        Monster1: true,
+        Monster2: true,
+        Arena: true,
+        MatchMessage: true,
+      },
+    });
   }
 
   async getMatches(params: {
@@ -31,6 +39,12 @@ export class MatchRepository {
       cursor,
       where,
       orderBy,
+      include: {
+        Monster1: true,
+        Monster2: true,
+        Arena: true,
+        MatchMessage: true,
+      },
     });
   }
 

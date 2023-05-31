@@ -19,6 +19,8 @@ const matchSchema = z.object({
   matchStartDate: z.dateString().describe("Match start date"),
   matchEndDate: z.dateString().describe("Match end date"),
   weight_category: weightCategoryEnumSchema.describe("Weight category"),
+  latitude: z.number().optional().describe("Arena latitude"),
+  longitude: z.number().optional().describe("Arena longitude"),
 });
 
 const createMatchSchema = matchSchema.pick({
@@ -26,6 +28,8 @@ const createMatchSchema = matchSchema.pick({
   fk_arena: true,
   matchStartDate: true,
   weight_category: true,
+  latitude: true,
+  longitude: true,
 });
 
 const getMatchSchema = matchSchema.pick({
@@ -40,6 +44,8 @@ const updateMatchSchema = matchSchema.pick({
   matchStartDate: true,
   matchEndDate: true,
   weight_category: true,
+  latitude: true,
+  longitude: true,
 });
 
 const deleteMatchSchema = matchSchema.pick({
@@ -63,6 +69,10 @@ export class CreateMatchDto extends createZodDto(createMatchSchema) {
   matchStartDate: string;
   @ApiProperty({ enum: weightCategoryEnumSchema.enum })
   weight_category: WeightCategoryEnum;
+  @ApiProperty({ type: "number", format: "double" })
+  latitude: number;
+  @ApiProperty({ type: "number", format: "double" })
+  longitude: number;
 }
 
 export class GetMatchDto extends createZodDto(getMatchSchema) {}
