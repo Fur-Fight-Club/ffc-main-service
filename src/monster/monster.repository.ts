@@ -49,6 +49,9 @@ export class MonsterRepository {
     where: Prisma.MonsterWhereUniqueInput;
   }): Promise<Monster> {
     const { where } = params;
-    return this.prisma.monster.delete({ where });
+
+    return this.prisma.monster.delete({
+      where,
+    });
   }
 }
