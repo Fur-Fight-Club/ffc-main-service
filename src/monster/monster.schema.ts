@@ -33,7 +33,7 @@ export const monsterSchema = z.object({
   User: z.object({}),
   fk_user: z.number().int(),
   Fighter: z.array(z.number().int()),
-  picture: z.string(),
+  picture: z.string().optional(),
 });
 
 const createMonsterSchema = monsterSchema.pick({
