@@ -3,14 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { ImageData, ImgurService } from "src/services/imgur.service";
+import { MonsterRepository } from "./monster.repository";
 import {
   CreateMonsterDto,
   GetMonsterDto,
   MonsterDto,
   UpdateMonsterDto,
 } from "./monster.schema";
-import { MonsterRepository } from "./monster.repository";
-import { ImageData, ImgurService } from "src/services/imgur.service";
 
 @Injectable()
 export class MonsterService {
@@ -20,6 +20,16 @@ export class MonsterService {
   ) {}
 
   async getMonsters(userId: number): Promise<MonsterDto[]> {
+    const monsters = await this.monsterRepository.getMonsters({
+      where: {
+        fk_user: userId,
+      },
+    });
+
+    return monsters;
+  }
+
+  async getMonstersForOneUser(userId: number): Promise<MonsterDto[]> {
     const monsters = await this.monsterRepository.getMonsters({
       where: {
         fk_user: userId,
