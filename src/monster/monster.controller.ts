@@ -3,25 +3,25 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  HttpCode,
-  ParseIntPipe,
   Request,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
-import { MonsterService } from "./monster.service";
+import { ZodValidationPipe } from "nestjs-zod";
+import { UserGuard } from "src/auth/auth-user.guard";
+import { JWTUserRequest } from "src/auth/auth.model";
+import { Roles } from "src/decorators/roles.decorator";
 import {
   CreateMonsterDto,
   GetMonsterDto,
   UpdateMonsterDto,
 } from "./monster.schema";
-import { ZodValidationPipe } from "nestjs-zod";
-import { JWTUserRequest } from "src/auth/auth.model";
-import { UserGuard } from "src/auth/auth-user.guard";
-import { Roles } from "src/decorators/roles.decorator";
+import { MonsterService } from "./monster.service";
 
 @Controller("monster")
 @ApiTags("Monster controller")
@@ -32,8 +32,15 @@ export class MonsterController {
   @HttpCode(200)
   @UseGuards(UserGuard)
   @Roles("USER", "ADMIN", "MONSTER_OWNER")
+  //Get all monsters for one user
   async getAll(@Request() req: JWTUserRequest) {
     return await this.monsterService.getMonsters(req.user.sub);
+  }
+
+  @Get(":id")
+  // Get all monster for one user with userId
+  async getAllMonsterOfOneUser(@Param("id", ParseIntPipe) data: number) {
+    return await this.monsterService.getMonstersForOneUser(data);
   }
 
   @Get(":id")
