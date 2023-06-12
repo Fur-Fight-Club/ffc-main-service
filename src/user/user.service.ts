@@ -6,6 +6,7 @@ import {
 import {
   LoginRequest,
   RegisterRequest,
+  UpdatePasswordUserDto,
   UpdateRequest,
   UserApi,
 } from "src/api/auth/user/user.schema";
@@ -80,5 +81,15 @@ export class UserService {
     const user = await this.userApi.updateById(updateRequest);
 
     return user;
+  }
+
+  async updatePassword(updatePasswordRequest: UpdatePasswordUserDto) {
+    const update = await this.userApi.updatePasswordById(updatePasswordRequest);
+
+    if (update) {
+      return true;
+    }
+
+    return false;
   }
 }

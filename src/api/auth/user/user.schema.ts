@@ -15,6 +15,28 @@ export const userSchema = z.object({
   email_token: z.string(),
 });
 
+const updatePasswordUserSchema = z.object({
+  id: z.number(),
+  oldPassword: z
+    .password()
+    .min(8)
+    .atLeastOne("digit")
+    .atLeastOne("lowercase")
+    .atLeastOne("uppercase")
+    .atLeastOne("special"),
+  password: z
+    .password()
+    .min(8)
+    .atLeastOne("digit")
+    .atLeastOne("lowercase")
+    .atLeastOne("uppercase")
+    .atLeastOne("special"),
+});
+
+export class UpdatePasswordUserDto extends createZodDto(
+  updatePasswordUserSchema
+) {}
+
 export type UserInterface = z.infer<typeof userSchema>;
 export type UserRoleInterface = z.infer<typeof userRoleSchema>;
 
@@ -96,6 +118,9 @@ export interface UserApi {
   resetPassword(email_token: string, password: string): Promise<UserInterface>;
   getById(id: number): Promise<UserInterface>;
   updateById(user: UpdateUserDto): Promise<UserInterface>;
+  updatePasswordById(
+    updatePassword: UpdatePasswordUserDto
+  ): Promise<UserInterface>;
 }
 
 export class LoginRequest {
