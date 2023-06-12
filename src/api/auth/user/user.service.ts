@@ -9,6 +9,7 @@ import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 import { AuthApi } from "../auth.interface";
 import {
   ConfirmAccountResponse,
+  UpdatePasswordUserDto,
   UpdateUserDto,
   UserApi,
   UserInterface,
@@ -151,16 +152,16 @@ class UserApiImpl implements UserApi {
     return response;
   }
 
-  async updateById(userInterface: any): Promise<UpdateUserDto> {
+  async updatePasswordById(updatePassword: UpdatePasswordUserDto) {
     const response = await handleApiResponse<UserInterface>(
-      await this.authApi.fetch(`user/${userInterface.id}`, {
+      await this.authApi.fetch(`user/${updatePassword.id}/password`, {
         method: "PATCH",
-        body: userInterface.body,
+        body: JSON.stringify(updatePassword),
       })
     );
 
     checkApiResponse(response, {
-      404: () => new NotFoundException("Can't find this user"),
+      404: () => new NotFoundException("Can find this user"),
     });
 
     return response;

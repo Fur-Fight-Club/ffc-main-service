@@ -16,6 +16,7 @@ import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  UpdatePasswordUserDto,
   UpdateRequest,
   UserResponse,
 } from "src/api/auth/user/user.schema";
@@ -92,5 +93,22 @@ export class UserController {
   @Delete(":id")
   async removeUser(@Param("id", ParseIntPipe) id: number) {
     return await this.userService.remove(id);
+  }
+
+  @Patch("password-update")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: "L'utilisateur est retourné",
+    type: UserResponse,
+  })
+  async updatePassword(
+    @Request() request: JWTUserRequest,
+    @Body() body: UpdatePasswordUserDto
+  ) {
+    return await this.userService.updatePassword({
+      ...body,
+      id: +request.user.sub,
+    });
   }
 }
