@@ -27,7 +27,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
     "cors": "^2.8.5",
-    "ffc-prisma-package": "^2.12.4",
+    "ffc-prisma-package": "^2.13.0",
     "fs": "^0.0.1-security",
     "imgur": "^2.3.0",
     "nestjs-zod": "^2.2.0",
