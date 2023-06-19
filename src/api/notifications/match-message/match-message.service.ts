@@ -19,6 +19,8 @@ class MatchMessageImpl implements MatchMessageApi {
     match: number,
     message: string
   ): Promise<MatchMessage> {
+    console.log({ sender, match, message });
+
     const response = await handleApiResponse<MatchMessage>(
       await this.notificationsApi.fetch(`match-message`, {
         method: "POST",
