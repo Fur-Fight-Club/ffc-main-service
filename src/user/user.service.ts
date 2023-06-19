@@ -6,6 +6,7 @@ import {
 import {
   LoginRequest,
   RegisterRequest,
+  UpdateEmailUserDto,
   UpdatePasswordUserDto,
   UpdateRequest,
   UserApi,
@@ -97,6 +98,16 @@ export class UserService {
 
   async updatePassword(updatePasswordRequest: UpdatePasswordUserDto) {
     const update = await this.userApi.updatePasswordById(updatePasswordRequest);
+
+    if (update) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async updateEmail(updateEmailRequest: UpdateEmailUserDto) {
+    const update = await this.userApi.updateEmailById(updateEmailRequest);
 
     if (update) {
       return true;

@@ -123,6 +123,7 @@ export interface UserApi {
   updatePasswordById(
     updatePassword: UpdatePasswordUserDto
   ): Promise<UserInterface>;
+  updateEmailById(updatePassword: UpdateEmailUserDto): Promise<UserInterface>;
 }
 
 export class LoginRequest {
@@ -197,3 +198,15 @@ export type ConfirmAccountResponse = Promise<boolean>;
 export type AskResetPasswordResponse = Promise<boolean>;
 
 export const UserApi = "UserApi";
+
+/**
+ * UPDATE EMAIL
+ */
+
+export const updateEmail = z.object({
+  id: z.number(),
+  email: z.string().email(),
+});
+
+export class UpdateEmailUserDto extends createZodDto(updateEmail) {}
+export type ConfirmChangeEmailResponse = Promise<boolean>;

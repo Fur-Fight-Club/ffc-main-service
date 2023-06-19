@@ -9,8 +9,8 @@ import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 import { AuthApi } from "../auth.interface";
 import {
   ConfirmAccountResponse,
+  UpdateEmailUserDto,
   UpdatePasswordUserDto,
-  UpdateUserDto,
   UserApi,
   UserInterface,
 } from "./user.schema";
@@ -157,6 +157,21 @@ class UserApiImpl implements UserApi {
       await this.authApi.fetch(`user/${updatePassword.id}/password`, {
         method: "PATCH",
         body: JSON.stringify(updatePassword),
+      })
+    );
+
+    checkApiResponse(response, {
+      404: () => new NotFoundException("Can find this user"),
+    });
+
+    return response;
+  }
+
+  async updateEmailById(updateEmail: UpdateEmailUserDto) {
+    const response = await handleApiResponse<UserInterface>(
+      await this.authApi.fetch(`user/${updateEmail.id}/email`, {
+        method: "PATCH",
+        body: JSON.stringify(updateEmail),
       })
     );
 

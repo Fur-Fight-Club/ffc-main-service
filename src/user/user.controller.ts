@@ -111,4 +111,21 @@ export class UserController {
       id: +request.user.sub,
     });
   }
+
+  @Patch("email-update")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: "L'utilisateur est retourné",
+    type: UserResponse,
+  })
+  async updateEmail(
+    @Request() request: JWTUserRequest,
+    @Body() body: UpdatePasswordUserDto
+  ) {
+    return await this.userService.updateEmail({
+      ...body,
+      id: +request.user.sub,
+    });
+  }
 }
