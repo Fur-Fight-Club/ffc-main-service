@@ -44,6 +44,26 @@ export class MatchRepository {
         Monster2: true,
         Arena: true,
         MatchMessage: true,
+        Transaction: {
+          select: {
+            Wallet: {
+              select: {
+                User: {
+                  select: {
+                    firstname: true,
+                    lastname: true,
+                  },
+                },
+              },
+            },
+            amount: true,
+            Monster: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
   }

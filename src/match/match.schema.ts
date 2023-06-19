@@ -127,6 +127,21 @@ const validateMatchWaitingListSerivceSchema = matchWaitingListSchema.pick({
   monster: true,
 });
 
+/**
+ * PLACE A BET ON A MATCH
+ */
+const matchBet = z.object({
+  amount: z.number().int(),
+  monster: z.number().int(),
+});
+
+export class CreateMatchBetDto extends createZodDto(matchBet) {
+  @ApiProperty({ type: "number", format: "int32" })
+  amount: number;
+  @ApiProperty({ type: "number", format: "int32" })
+  monster: number;
+}
+
 export type StatusEnum = z.infer<typeof statusEnumSchema>;
 
 export class CreateMatchWaitingListDto extends createZodDto(

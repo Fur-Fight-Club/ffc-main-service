@@ -19,12 +19,14 @@ import {
 import { UserGuard } from "src/auth/auth-user.guard";
 import { JWTUserRequest } from "src/auth/auth.model";
 import {
+  CreateMatchBetDto,
   CreateMatchDto,
   CreateMatchWaitingListDto,
   GetMatchDto,
   ValidateMatchWaitingListControllerDto,
 } from "./match.schema";
 import { MatchService } from "./match.service";
+import { Transaction } from "ffc-prisma-package/dist/client";
 
 @Controller("match")
 // @UseGuards(UserGuard)
@@ -105,5 +107,24 @@ export class MatchController {
     @Param("id") id: number
   ) {
     return this.matchService.sendMessage(request.user.sub, id, body.message);
+  }
+
+  @Post(":id/bet")
+  @UseGuards(UserGuard)
+  @ApiBody({
+    description: "Place a bet to a match",
+    type: CreateMatchBetDto,
+  })
+  @ApiParam({
+    name: "id",
+    description: "Match id",
+    type: "number",
+  })
+  placeBet(
+    @Body(ZodValidationPipe) body: CreateMatchBetDto,
+    @Request() request: JWTUserRequest,
+    @Param("id") id: number
+  ): Promise<Transaction> {
+    return this.matchService.placeBet(+request.user.sub, +id, body);
   }
 }

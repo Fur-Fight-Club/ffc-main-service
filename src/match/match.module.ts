@@ -11,9 +11,19 @@ import { PrismaService } from "src/services/prisma.service";
 import { MatchController } from "./match.controller";
 import { MatchRepository } from "./match.repository";
 import { MatchService } from "./match.service";
+import { PaymentsApiProvider } from "src/api/payments/payments.service";
+import { WalletApiProvider } from "src/api/payments/wallet/wallet.service";
+import { WalletModule } from "src/wallet/wallet.module";
+import { PaymentsModule } from "src/api/payments/payments.module";
 
 @Module({
-  imports: [ConfigModule, NotificationsModule, AuthModule],
+  imports: [
+    ConfigModule,
+    NotificationsModule,
+    AuthModule,
+    PaymentsModule,
+    WalletModule,
+  ],
   controllers: [MatchController],
   providers: [
     MatchService,
@@ -24,6 +34,8 @@ import { MatchService } from "./match.service";
     PrismaService,
     MatchRepository,
     MonsterRepository,
+    PaymentsApiProvider,
+    WalletApiProvider,
   ],
 })
 export class MatchModule {}

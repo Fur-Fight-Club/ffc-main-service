@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+} from "@nestjs/common";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
@@ -7,6 +12,7 @@ import { parseToZodObject } from "src/utils/match.utils";
 import { MatchRepository } from "./match.repository";
 import {
   CloseMatchDto,
+  CreateMatchBetDto,
   CreateMatchDto,
   DeleteMatchDto,
   GetMatchDto,
@@ -15,6 +21,12 @@ import {
   UpdateMatchDto,
   ValidateMatchWaitingListServiceDto,
 } from "./match.schema";
+import { WalletApi } from "src/api/payments/wallet/wallet.schema";
+import {
+  TransactionTag,
+  TransactionType,
+} from "ffc-prisma-package/dist/client";
+import { uuid } from "uuidv4";
 
 @Injectable()
 export class MatchService {
@@ -22,7 +34,8 @@ export class MatchService {
     @Inject(MatchMessageApi) private matchMessageApi: MatchMessageApi,
     private matchRepository: MatchRepository,
     private monsterRepository: MonsterRepository,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    @Inject(WalletApi) private walletApi: WalletApi
   ) {}
 
   async getMatches(): Promise<MatchInterface[]> {
@@ -356,4 +369,62 @@ export class MatchService {
       throw error;
     }
   };
+
+  async placeBet(userId: number, matchId: number, body: CreateMatchBetDto) {
+    const wallet = await this.walletApi.getBalance(userId);
+    if (body.amount < 100) {
+      throw new BadRequestException(`Minimum bet is 100 credits`);
+    }
+    if (wallet.credits < body.amount) {
+      throw new BadRequestException(`You don't have enough credits`);
+    }
+
+    const newBalance = wallet.credits - body.amount;
+
+    await this.walletApi.updateUsersWalletBalance(userId, newBalance);
+
+    const userWallet = await this.prisma.wallet.findFirst({
+      where: {
+        User: {
+          id: userId,
+        },
+      },
+    });
+
+    const matchBet = await this.prisma.transaction.create({
+      data: {
+        amount: body.amount,
+        Match: {
+          connect: {
+            id: matchId,
+          },
+        },
+        Wallet: {
+          connect: {
+            id: userWallet.id,
+          },
+        },
+        Monster: {
+          connect: {
+            id: body.monster,
+          },
+        },
+        tag: TransactionTag.BET,
+        type: TransactionType.IN,
+        Invoice: {
+          create: {
+            amount: body.amount,
+            url: "",
+            uuid: uuid(),
+            User: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        },
+      },
+    });
+    return matchBet;
+  }
 }
