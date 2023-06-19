@@ -15,8 +15,6 @@ export interface MatchMessageApi {
  * CREATE MESSAGE
  */
 export const createMessage = z.object({
-  sender: z.number().int(),
-  match: z.number().int(),
   message: z.string(),
 });
 

@@ -106,7 +106,7 @@ export class MatchController {
     @Request() request: JWTUserRequest,
     @Param("id") id: number
   ) {
-    return this.matchService.sendMessage(request.user.sub, id, body.message);
+    return this.matchService.sendMessage(+request.user.sub, +id, body.message);
   }
 
   @Post(":id/bet")

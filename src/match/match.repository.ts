@@ -43,7 +43,11 @@ export class MatchRepository {
         Monster1: true,
         Monster2: true,
         Arena: true,
-        MatchMessage: true,
+        MatchMessage: {
+          include: {
+            User: true,
+          },
+        },
         Transaction: {
           select: {
             Wallet: {
