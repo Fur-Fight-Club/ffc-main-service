@@ -363,3 +363,27 @@ export class LeaveAppEventDto extends createZodDto(leaveAppEventSchema) {
     language: string;
   };
 }
+
+export interface EventsApi {
+  createButtonClickEvent(
+    createButtonClickEventDto: ButtonClickDto
+  ): Promise<void>;
+
+  createMouseClickEvent(createMouseClickEventDto: MouseClickDto): Promise<void>;
+
+  createPathnameChangeEvent(
+    createPathnameChangeEventDto: PathnameChangeDto
+  ): Promise<void>;
+
+  createLeaveAppEvent(createLeaveAppEventDto: LeaveAppEventDto): Promise<void>;
+
+  getButtonClickEvents(): Promise<ButtonClickDto[]>;
+
+  getMouseClickEvents(): Promise<MouseClickDto[]>;
+
+  getPathnameChangeEvents(): Promise<PathnameChangeDto[]>;
+
+  getLeaveAppEvents(): Promise<LeaveAppEventDto[]>;
+}
+
+export const EventsApi = "EventsApi";
