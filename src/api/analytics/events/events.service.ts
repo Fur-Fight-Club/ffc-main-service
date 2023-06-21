@@ -16,7 +16,7 @@ class EventsImpl implements EventsApi {
     createButtonClickEventDto: ButtonClickDto
   ): Promise<void> {
     const response = await handleApiResponse<void>(
-      await this.analyticsApi.fetch(`button-click`, {
+      await this.analyticsApi.fetch(`events/button-click`, {
         method: "POST",
         body: JSON.stringify({
           ...createButtonClickEventDto,
@@ -33,7 +33,7 @@ class EventsImpl implements EventsApi {
     createMouseClickEventDto: MouseClickDto
   ): Promise<void> {
     const response = await handleApiResponse<void>(
-      await this.analyticsApi.fetch(`mouse-click`, {
+      await this.analyticsApi.fetch(`events/mouse-click`, {
         method: "POST",
         body: JSON.stringify({
           ...createMouseClickEventDto,
@@ -50,7 +50,7 @@ class EventsImpl implements EventsApi {
     createPathnameChangeEventDto: PathnameChangeDto
   ): Promise<void> {
     const response = await handleApiResponse<void>(
-      await this.analyticsApi.fetch(`pathname-change`, {
+      await this.analyticsApi.fetch(`events/pathname-change`, {
         method: "POST",
         body: JSON.stringify({
           ...createPathnameChangeEventDto,
@@ -67,7 +67,7 @@ class EventsImpl implements EventsApi {
     createLeaveAppEventDto: LeaveAppEventDto
   ): Promise<void> {
     const response = await handleApiResponse<void>(
-      await this.analyticsApi.fetch(`leave-app`, {
+      await this.analyticsApi.fetch(`events/leave-app`, {
         method: "POST",
         body: JSON.stringify({
           ...createLeaveAppEventDto,
@@ -82,7 +82,7 @@ class EventsImpl implements EventsApi {
 
   async getButtonClickEvents(): Promise<ButtonClickDto[]> {
     const response = await handleApiResponse<ButtonClickDto[]>(
-      await this.analyticsApi.fetch(`button-click`, {
+      await this.analyticsApi.fetch(`events/button-click`, {
         method: "GET",
       })
     );
@@ -94,7 +94,7 @@ class EventsImpl implements EventsApi {
 
   async getMouseClickEvents(): Promise<MouseClickDto[]> {
     const response = await handleApiResponse<MouseClickDto[]>(
-      await this.analyticsApi.fetch(`mouse-click`, {
+      await this.analyticsApi.fetch(`events/mouse-click`, {
         method: "GET",
       })
     );
@@ -106,7 +106,7 @@ class EventsImpl implements EventsApi {
 
   async getLeaveAppEvents(): Promise<LeaveAppEventDto[]> {
     const response = await handleApiResponse<LeaveAppEventDto[]>(
-      await this.analyticsApi.fetch(`leave-app`, {
+      await this.analyticsApi.fetch(`events/leave-app`, {
         method: "GET",
       })
     );
@@ -118,7 +118,7 @@ class EventsImpl implements EventsApi {
 
   async getPathnameChangeEvents(): Promise<PathnameChangeDto[]> {
     const response = await handleApiResponse<PathnameChangeDto[]>(
-      await this.analyticsApi.fetch(`pathname-change`, {
+      await this.analyticsApi.fetch(`events/pathname-change`, {
         method: "GET",
       })
     );
