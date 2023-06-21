@@ -66,15 +66,15 @@ export const pathnameChangeSchema = z.object({
   endTime: z.number(),
   userAgent: z.object({
     browser: z.object({
-      name: z.string(),
-      version: z.string(),
+      name: z.string().optional(),
+      version: z.string().optional(),
     }),
     os: z.object({
-      name: z.string(),
-      version: z.string(),
+      name: z.string().optional(),
+      version: z.string().optional(),
     }),
-    platform: z.string(),
-    language: z.string(),
+    platform: z.string().optional(),
+    language: z.string().optional(),
   }),
 });
 
@@ -167,15 +167,15 @@ export const mouseClickSchema = z.object({
   }),
   userAgent: z.object({
     browser: z.object({
-      name: z.string(),
-      version: z.string(),
+      name: z.string().optional(),
+      version: z.string().optional(),
     }),
     os: z.object({
-      name: z.string(),
-      version: z.string(),
+      name: z.string().optional(),
+      version: z.string().optional(),
     }),
-    platform: z.string(),
-    language: z.string(),
+    platform: z.string().optional(),
+    language: z.string().optional(),
   }),
 });
 
@@ -278,15 +278,15 @@ export const leaveAppEventSchema = z.object({
   visitedPages: z.array(z.object({ page: z.string(), timestamp: z.number() })),
   userAgent: z.object({
     browser: z.object({
-      name: z.string(),
-      version: z.string(),
+      name: z.string().optional(),
+      version: z.string().optional(),
     }),
     os: z.object({
-      name: z.string(),
-      version: z.string(),
+      name: z.string().optional(),
+      version: z.string().optional(),
     }),
-    platform: z.string(),
-    language: z.string(),
+    platform: z.string().optional(),
+    language: z.string().optional(),
   }),
 });
 
