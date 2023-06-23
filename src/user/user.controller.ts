@@ -42,6 +42,11 @@ export class UserController {
     return await this.userService.login(body);
   }
 
+  @Post("logout")
+  async logout() {
+    return true;
+  }
+
   @ApiBody({
     description: "Un utilisateur s'inscrit",
     type: RegisterRequest,
