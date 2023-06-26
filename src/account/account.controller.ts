@@ -22,7 +22,9 @@ export class AccountController {
     type: ConfirmAccountApiBody,
   })
   async confirmAccount(@Body(ZodValidationPipe) body: ConfirmAccountDto) {
-    return await this.accountService.confirmAccount(body.email_token);
+    return {
+      confirm: await this.accountService.confirmAccount(body.email_token),
+    };
   }
 
   @Post("ask-reset-password")
