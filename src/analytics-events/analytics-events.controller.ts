@@ -6,6 +6,8 @@ import {
   ButtonClickDto,
   PathnameChangeDto,
   LeaveAppEventDto,
+  GetHeatmapDataDto,
+  HeatmapData,
 } from "src/api/analytics/events/events.schema";
 
 @Controller("analytics-events")
@@ -60,5 +62,12 @@ export class AnalyticsEventsController {
   @Get("leave-app")
   async getLeaveAppEvents(): Promise<any[]> {
     return await this.analyticsEventsService.getLeaveAppEvents();
+  }
+
+  @Post("heatmap-data")
+  async getHeatmapData(
+    @Body(ZodValidationPipe) getHeatmapData: GetHeatmapDataDto
+  ): Promise<HeatmapData[]> {
+    return await this.analyticsEventsService.getHeatmapData(getHeatmapData);
   }
 }
