@@ -16,6 +16,7 @@ jobs:
     - name: 🔨 Build .env from GitHub secrets
       run: |
         echo "DATABASE_URL='${{ secrets.DATABASE_URL }}'" >> .env
+        echo "IMGUR_SECRET='${{ secrets.IMGUR_SECRET }}'" >> .env
 
     - name: 🗝️ Create SSL keys from secrets
       run: |

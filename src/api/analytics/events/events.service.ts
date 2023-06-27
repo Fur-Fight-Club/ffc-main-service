@@ -2,6 +2,8 @@ import { Inject, Injectable, Provider } from "@nestjs/common";
 import {
   ButtonClickDto,
   EventsApi,
+  GetHeatmapDataDto,
+  HeatmapData,
   LeaveAppEventDto,
   MouseClickDto,
   PathnameChangeDto,
@@ -120,6 +122,23 @@ class EventsImpl implements EventsApi {
     const response = await handleApiResponse<PathnameChangeDto[]>(
       await this.analyticsApi.fetch(`events/pathname-change`, {
         method: "GET",
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+
+  async getHeatmapData(
+    getHeatmapDataDto: GetHeatmapDataDto
+  ): Promise<HeatmapData[]> {
+    const response = await handleApiResponse<HeatmapData[]>(
+      await this.analyticsApi.fetch(`events/heatmap-data`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...getHeatmapDataDto,
+        }),
       })
     );
 

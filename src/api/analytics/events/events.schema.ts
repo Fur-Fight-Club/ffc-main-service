@@ -364,6 +364,36 @@ export class LeaveAppEventDto extends createZodDto(leaveAppEventSchema) {
   };
 }
 
+export const getHeatmapDataSchema = z.object({
+  count: z.number().optional(),
+  route: z.string(),
+});
+
+export class GetHeatmapDataDto extends createZodDto(getHeatmapDataSchema) {
+  @ApiProperty({
+    description: "Amount of data to retrieve",
+    example: 100,
+  })
+  count?: number;
+
+  @ApiProperty({
+    description: "The route to collect data from",
+    example: "/my/route",
+  })
+  route: string;
+}
+
+export interface HeatmapData {
+  window: {
+    width: number;
+    height: number;
+  };
+  click: {
+    x: number;
+    y: number;
+  };
+}
+
 export interface EventsApi {
   createButtonClickEvent(
     createButtonClickEventDto: ButtonClickDto
@@ -384,6 +414,8 @@ export interface EventsApi {
   getPathnameChangeEvents(): Promise<PathnameChangeDto[]>;
 
   getLeaveAppEvents(): Promise<LeaveAppEventDto[]>;
+
+  getHeatmapData(getHeatmapDataDto: GetHeatmapDataDto): Promise<HeatmapData[]>;
 }
 
 export const EventsApi = "EventsApi";

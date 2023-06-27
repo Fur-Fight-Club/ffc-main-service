@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
   EventsApi,
+  GetHeatmapDataDto,
+  HeatmapData,
   MouseClickDto,
 } from "src/api/analytics/events/events.schema";
 import { ButtonClickDto } from "src/api/analytics/events/events.schema";
@@ -33,5 +35,8 @@ export class AnalyticsEventsService {
   }
   async getLeaveAppEvents(): Promise<any[]> {
     return await this.eventsApi.getLeaveAppEvents();
+  }
+  getHeatmapData(getHeatmapData: GetHeatmapDataDto): Promise<HeatmapData[]> {
+    return this.eventsApi.getHeatmapData(getHeatmapData);
   }
 }

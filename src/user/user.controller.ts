@@ -23,6 +23,7 @@ import {
 import { UserGuard } from "src/auth/auth-user.guard";
 import { JWTUserRequest } from "src/auth/auth.model";
 import { UserService } from "./user.service";
+import { Roles } from "src/decorators/roles.decorator";
 
 @Controller("user")
 @ApiTags("User controller")
@@ -72,7 +73,7 @@ export class UserController {
   }
 
   @Patch(":id")
-  // @UseGuards(UserGuard)
+  @UseGuards(UserGuard)
   @ApiBearerAuth()
   @ApiResponse({
     description: "L'utilisateur est retourné",
@@ -86,16 +87,25 @@ export class UserController {
   }
 
   @Get(":id")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @Roles("ADMIN")
   async getOneUser(@Param("id", ParseIntPipe) id: number) {
     return await this.userService.getById(id);
   }
 
   @Get()
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @Roles("ADMIN")
   async getAllUsers() {
     return await this.userService.getAllUsers();
   }
 
   @Delete(":id")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @Roles("ADMIN")
   async removeUser(@Param("id", ParseIntPipe) id: number) {
     return await this.userService.remove(id);
   }
