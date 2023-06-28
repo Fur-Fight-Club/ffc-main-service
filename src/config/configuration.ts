@@ -10,7 +10,8 @@ export default () => ({
     "ffc-payments-service",
   ],
   ffc_web_app_url: process.env.FFC_WEB_APP_URL ?? "http://localhost:3000",
-  ffc_analytics_url: process.env.FFC_ANALYTICS_URL ?? "http://localhost:4001",
+  ffc_analytics_url:
+    process.env.FFC_ANALYTICS_URL ?? "http://10.102.0.246:4001",
   ffc_auth_url: process.env.FFC_AUTH_URL ?? "http://10.102.3.34:4002",
   ffc_main_url: process.env.FFC_MAIN_URL ?? "http://api.ffc.mistergooddeal.org",
   ffc_notifications_url:

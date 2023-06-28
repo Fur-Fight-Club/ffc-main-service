@@ -21,6 +21,7 @@ const matchSchema = z.object({
   weight_category: weightCategoryEnumSchema.describe("Weight category"),
   latitude: z.number().optional().describe("Arena latitude"),
   longitude: z.number().optional().describe("Arena longitude"),
+  entry_cost: z.number().int().default(1000),
 });
 
 const createMatchSchema = matchSchema.pick({
@@ -30,6 +31,7 @@ const createMatchSchema = matchSchema.pick({
   weight_category: true,
   latitude: true,
   longitude: true,
+  entry_cost: true,
 });
 
 const getMatchSchema = matchSchema.pick({
@@ -46,6 +48,7 @@ const updateMatchSchema = matchSchema.pick({
   weight_category: true,
   latitude: true,
   longitude: true,
+  entry_cost: true,
 });
 
 const deleteMatchSchema = matchSchema.pick({
@@ -55,6 +58,21 @@ const deleteMatchSchema = matchSchema.pick({
 const closeMatchSchema = matchSchema.pick({
   id: true,
 });
+
+const closeMatchBodySchema = z.object({
+  winner: z.number().int(),
+});
+
+export type CloseMatchBodyInterface = z.infer<typeof closeMatchBodySchema>;
+
+export class CloseMatchBodyDto extends createZodDto(closeMatchBodySchema) {
+  @ApiProperty({
+    type: "number",
+    format: "int32",
+    description: "Monster ID of the winner",
+  })
+  winner: number;
+}
 
 export type MatchInterface = z.infer<typeof matchSchema>;
 
@@ -73,6 +91,8 @@ export class CreateMatchDto extends createZodDto(createMatchSchema) {
   latitude: number;
   @ApiProperty({ type: "number", format: "double" })
   longitude: number;
+  @ApiProperty({ type: "number", format: "int32" })
+  entry_cost: number;
 }
 
 export class GetMatchDto extends createZodDto(getMatchSchema) {}
@@ -92,6 +112,8 @@ export class UpdateMatchDto extends createZodDto(updateMatchSchema) {
   matchEndDate: string;
   @ApiProperty({ enum: weightCategoryEnumSchema.enum })
   weight_category: WeightCategoryEnum;
+  @ApiProperty({ type: "number", format: "int32" })
+  entry_cost: number;
 }
 
 export class DeleteMatchDto extends createZodDto(deleteMatchSchema) {}

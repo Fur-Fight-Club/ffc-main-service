@@ -11,6 +11,7 @@ import { handleMatchMessageError } from "src/utils/error/match.error";
 import { parseToZodObject } from "src/utils/match.utils";
 import { MatchRepository } from "./match.repository";
 import {
+  CloseMatchBodyDto,
   CloseMatchDto,
   CreateMatchBetDto,
   CreateMatchDto,
@@ -27,6 +28,7 @@ import {
   TransactionType,
 } from "ffc-prisma-package/dist/client";
 import { uuid } from "uuidv4";
+import { connect } from "http2";
 
 @Injectable()
 export class MatchService {
@@ -289,7 +291,10 @@ export class MatchService {
     }
   }
 
-  async closeMatch(params: CloseMatchDto): Promise<MatchInterface> {
+  async closeMatch(
+    params: CloseMatchDto,
+    body: CloseMatchBodyDto
+  ): Promise<MatchInterface> {
     try {
       const { id } = params;
 
@@ -301,7 +306,131 @@ export class MatchService {
         },
         data: {
           matchEndDate: new Date(),
+          winner: {
+            connect: {
+              id: body.winner,
+            },
+          },
         },
+      });
+
+      const currentMatch = await this.matchRepository.getMatch({
+        where: {
+          id,
+        },
+      });
+
+      const winner = await this.prisma.monster.findUnique({
+        where: {
+          id: body.winner,
+        },
+      });
+
+      const loserId =
+        body.winner === match.fk_monster_1
+          ? match.fk_monster_2
+          : match.fk_monster_1;
+
+      const loser = await this.prisma.monster.findUnique({
+        where: {
+          id: loserId,
+        },
+      });
+
+      // Calculate mmr gain/loss
+      const winnerMmrGain = loser.mmr * 0.1;
+      const loserMmrLoss = winner.mmr * 0.1 + loser.mmr * 0.1;
+
+      // Update winner mmr
+      await this.prisma.monster.update({
+        where: {
+          id: body.winner,
+        },
+        data: {
+          mmr: winner.mmr + winnerMmrGain,
+        },
+      });
+
+      // Update loser mmr
+      await this.prisma.monster.update({
+        where: {
+          id: loserId,
+        },
+        data: {
+          mmr: loser.mmr - loserMmrLoss,
+        },
+      });
+
+      // Remove entry cost from loser
+      await this.prisma.wallet.update({
+        where: {
+          fk_user: loser.fk_user,
+        },
+        data: {
+          amount: {
+            decrement: match.entry_cost,
+          },
+        },
+      });
+
+      // Add entry cost to winner
+      await this.prisma.wallet.update({
+        where: {
+          fk_user: winner.fk_user,
+        },
+        data: {
+          amount: {
+            increment: match.entry_cost * 2,
+          },
+        },
+      });
+
+      // Get all bets
+      const winnerBets = currentMatch.Transaction.filter(
+        (transaction) => transaction.monsterId === winner.id
+      );
+
+      const loserBets = currentMatch.Transaction.filter(
+        (transaction) => transaction.monsterId === loser.id
+      );
+
+      // Ratio and total bets
+      const winnerRatio = winnerBets.length / loserBets.length;
+      const totalBetsAmount =
+        winnerBets
+          .map((transaction) => transaction.amount)
+          .reduce((a, b) => a + b, 0) +
+        loserBets
+          .map((transaction) => transaction.amount)
+          .reduce((a, b) => a + b, 0);
+
+      // Get all unique bettors from winnerBets
+      const bettorsWallet = [
+        ...new Set(winnerBets.map((transaction) => transaction.walletId)),
+      ];
+
+      // Recredit bettors
+      await this.prisma.wallet.updateMany({
+        where: {
+          id: {
+            in: bettorsWallet,
+          },
+        },
+        data: {
+          amount: {
+            increment: totalBetsAmount * winnerRatio,
+          },
+        },
+      });
+
+      // Create a transaction for each bettor
+      await this.prisma.transaction.createMany({
+        data: bettorsWallet.map((walletId) => ({
+          amount: totalBetsAmount * winnerRatio,
+          walletId,
+          tag: "BET",
+          type: "OUT",
+        })),
       });
 
       return parseToZodObject(match);
