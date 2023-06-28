@@ -10,9 +10,7 @@ import { PrismaService } from "src/services/prisma.service";
 export class MatchRepository {
   constructor(private prisma: PrismaService) {}
 
-  async getMatch(params: {
-    where: Prisma.MatchWhereUniqueInput;
-  }): Promise<Match | null> {
+  async getMatch(params: { where: Prisma.MatchWhereUniqueInput }) {
     const { where } = params;
     return this.prisma.match.findUnique({
       where,
@@ -21,6 +19,7 @@ export class MatchRepository {
         Monster2: true,
         Arena: true,
         MatchMessage: true,
+        Transaction: true,
       },
     });
   }

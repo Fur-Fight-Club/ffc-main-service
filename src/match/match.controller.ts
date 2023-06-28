@@ -19,6 +19,7 @@ import {
 import { UserGuard } from "src/auth/auth-user.guard";
 import { JWTUserRequest } from "src/auth/auth.model";
 import {
+  CloseMatchBodyDto,
   CreateMatchBetDto,
   CreateMatchDto,
   CreateMatchWaitingListDto,
@@ -79,8 +80,11 @@ export class MatchController {
 
   @Patch("close/:id")
   @ApiParam({ name: "id", description: "Match id", type: Number })
-  async closeMatch(@Param("id", ParseIntPipe) id: GetMatchDto) {
-    return this.matchService.closeMatch({ id: +id });
+  async closeMatch(
+    @Param("id", ParseIntPipe) id: GetMatchDto,
+    @Body(ZodValidationPipe) data: CloseMatchBodyDto
+  ) {
+    return this.matchService.closeMatch({ id: +id }, data);
   }
 
   @Delete("delete/:id")
