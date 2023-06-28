@@ -1,15 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
+  Patch,
+  Post,
   UseGuards,
 } from "@nestjs/common";
-import { ArenasService } from "./arenas.service";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -17,14 +16,15 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { UserGuard } from "src/auth/auth-user.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Roles } from "src/decorators/roles.decorator";
 import {
   AreanApiResponse,
   CreateArenaDto,
   UpdateArenaDto,
 } from "./arenas.schema";
-import { UserGuard } from "src/auth/auth-user.guard";
-import { Roles } from "src/decorators/roles.decorator";
-import { RolesGuard } from "src/auth/roles.guard";
+import { ArenasService } from "./arenas.service";
 
 @Controller("arenas")
 @ApiTags("Arenas controller")
@@ -49,7 +49,6 @@ export class ArenasController {
   }
 
   @Get()
-  @Roles("ADMIN")
   @ApiResponse({
     status: 200,
     description: "The Arenas has been successfully retrieved.",
