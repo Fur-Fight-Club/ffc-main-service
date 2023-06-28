@@ -47,6 +47,7 @@ export const arenaSchema = z.object({
   city: z.string(),
   zipcode: z.string().length(5),
   country: z.string(),
+  picture: z.string().optional(),
 });
 
 /**
@@ -60,6 +61,7 @@ const createArenaSchema = arenaSchema.pick({
   city: true,
   zipcode: true,
   country: true,
+  picture: true,
 });
 
 export class CreateArenaDto extends createZodDto(createArenaSchema) {
@@ -92,6 +94,11 @@ export class CreateArenaDto extends createZodDto(createArenaSchema) {
     type: "string",
   })
   country: string;
+
+  @ApiProperty({
+    type: "string",
+  })
+  picture?: string;
 }
 
 /**
@@ -101,6 +108,7 @@ export class CreateArenaDto extends createZodDto(createArenaSchema) {
 const updateArenaSchema = arenaSchema.pick({
   id: true,
   name: true,
+  picture: true,
 });
 
 export class UpdateArenaDto extends createZodDto(updateArenaSchema) {
@@ -108,6 +116,11 @@ export class UpdateArenaDto extends createZodDto(updateArenaSchema) {
     type: "string",
   })
   name: string;
+
+  @ApiProperty({
+    type: "string",
+  })
+  picture?: string;
 }
 
 /**

@@ -6,11 +6,17 @@ import {
   UpdateArenaDto,
 } from "./arenas.schema";
 import { ArenaRepository } from "./arena.repository";
+import { ImgurService } from "src/services/imgur.service";
 
 @Injectable()
 export class ArenasService {
-  constructor(private readonly arenaRepository: ArenaRepository) {}
-  create(createArenaDto: CreateArenaDto) {
+  constructor(
+    private readonly arenaRepository: ArenaRepository,
+    private readonly imgur: ImgurService
+  ) {}
+  async create(createArenaDto: CreateArenaDto) {
+    const imgurResponse = await this.imgur.uploadImage(createArenaDto.picture);
+    createArenaDto.picture = imgurResponse.link;
     return this.arenaRepository.createArena({ data: createArenaDto });
   }
 
@@ -22,7 +28,14 @@ export class ArenasService {
     return this.arenaRepository.getArena({ where: { id: getArenaDto.id } });
   }
 
-  update(updateArenaDto: UpdateArenaDto) {
+  async update(updateArenaDto: UpdateArenaDto) {
+    if (!updateArenaDto.picture.includes("https")) {
+      const imgurResponse = await this.imgur.uploadImage(
+        updateArenaDto.picture
+      );
+      updateArenaDto.picture = imgurResponse.link;
+    }
+
     return this.arenaRepository.updateArena({
       where: { id: updateArenaDto.id },
       data: updateArenaDto,
