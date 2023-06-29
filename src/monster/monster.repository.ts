@@ -35,17 +35,6 @@ export class MonsterRepository {
   }): Promise<Monster> {
     const { data } = params;
     const result = await this.prisma.monster.create({ data });
-
-    if (result) {
-      await this.prisma.user.update({
-        where: {
-          id: result.fk_user,
-        },
-        data: {
-          role: Roles.MONSTER_OWNER,
-        },
-      });
-    }
     return result;
   }
   async updateMonster(params: {
