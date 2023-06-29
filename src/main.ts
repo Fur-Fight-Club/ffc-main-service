@@ -3,6 +3,30 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import { json } from "express";
+const fetch = require("node-fetch");
+
+const services = [
+  {
+    name: "ffc-main",
+    url: process.env.FFC_MAIN_URL,
+  },
+  {
+    name: "ffc-analytics",
+    url: process.env.FFC_ANALYTICS_URL,
+  },
+  {
+    name: "ffc-auth",
+    url: process.env.FFC_AUTH_URL,
+  },
+  {
+    name: "ffc-notifications",
+    url: process.env.FFC_NOTIFICATIONS_URL,
+  },
+  {
+    name: "ffc-payments",
+    url: process.env.FFC_PAYMENTS_URL,
+  },
+];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -38,10 +62,15 @@ async function bootstrap() {
     )} is running on: ${await app.getUrl()}`
   );
   console.log("Ready to connect to services...");
-  console.log("ffc-main => ", process.env.FFC_MAIN_URL);
-  console.log("ffc-analytics => ", process.env.FFC_ANALYTICS_URL);
-  console.log("ffc-auth => ", process.env.FFC_AUTH_URL);
-  console.log("ffc-notifications => ", process.env.FFC_NOTIFICATIONS_URL);
-  console.log("ffc-payments => ", process.env.FFC_PAYMENTS_URL);
+
+  services.forEach(async (service) => {
+    try {
+      const response = await fetch(`${service.url}/ping`);
+      const data = await response.text();
+      console.log(`${service.name} => ${data}`);
+    } catch (error) {
+      console.error(`Error connecting to ${service.name}:`, error);
+    }
+  });
 }
 bootstrap();
