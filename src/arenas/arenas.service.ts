@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
+import { ImgurService } from "src/services/imgur.service";
+import { ArenaRepository } from "./arena.repository";
 import {
   CreateArenaDto,
   DeleteArenaDto,
   GetArenaDto,
   UpdateArenaDto,
 } from "./arenas.schema";
-import { ArenaRepository } from "./arena.repository";
-import { ImgurService } from "src/services/imgur.service";
 
 @Injectable()
 export class ArenasService {
@@ -15,8 +15,12 @@ export class ArenasService {
     private readonly imgur: ImgurService
   ) {}
   async create(createArenaDto: CreateArenaDto) {
-    const imgurResponse = await this.imgur.uploadImage(createArenaDto.picture);
-    createArenaDto.picture = imgurResponse.link;
+    if (createArenaDto?.picture) {
+      const imgurResponse = await this.imgur.uploadImage(
+        createArenaDto.picture
+      );
+      createArenaDto.picture = imgurResponse.link;
+    }
     return this.arenaRepository.createArena({ data: createArenaDto });
   }
 
