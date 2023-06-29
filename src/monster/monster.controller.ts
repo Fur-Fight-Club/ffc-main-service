@@ -37,7 +37,7 @@ export class MonsterController {
     return await this.monsterService.getMonsters(req.user.sub);
   }
 
-  @Get(":id")
+  @Get("userMonster/:id")
   // Get all monster for one user with userId
   async getAllMonsterOfOneUser(@Param("id", ParseIntPipe) data: number) {
     return await this.monsterService.getMonstersForOneUser(data);
