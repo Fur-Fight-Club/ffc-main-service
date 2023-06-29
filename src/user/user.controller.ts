@@ -16,6 +16,7 @@ import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  UpdateEmailUserDto,
   UpdatePasswordUserDto,
   UpdateRequest,
   UserResponse,
@@ -80,10 +81,13 @@ export class UserController {
     type: UserResponse,
   })
   async update(
-    @Param("id", ParseIntPipe) id: number,
-    @Body(ZodValidationPipe) body: UpdateRequest
+    @Param("id") id: number,
+    @Body() body: UpdateRequest,
+    @Request() request: JWTUserRequest
   ) {
-    return await this.userService.update({ ...body, id: +id });
+    console.log({ ...body, id: request.user.sub });
+
+    return await this.userService.update({ ...body, id: request.user.sub });
   }
 
   @Get(":id")
@@ -136,10 +140,10 @@ export class UserController {
   })
   async updateEmail(
     @Request() request: JWTUserRequest,
-    @Body() body: UpdatePasswordUserDto
+    @Body() body: UpdateEmailUserDto
   ) {
     return await this.userService.updateEmail({
-      ...body,
+      email: body.email,
       id: +request.user.sub,
     });
   }
