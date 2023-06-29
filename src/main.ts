@@ -37,5 +37,11 @@ async function bootstrap() {
       "service"
     )} is running on: ${await app.getUrl()}`
   );
+  console.log("Ready to connect to services...");
+  console.log("ffc-main => ", process.env.FFC_MAIN_URL);
+  console.log("ffc-analytics => ", process.env.FFC_ANALYTICS_URL);
+  console.log("ffc-auth => ", process.env.FFC_AUTH_URL);
+  console.log("ffc-notifications => ", process.env.FFC_NOTIFICATIONS_URL);
+  console.log("ffc-payments => ", process.env.FFC_PAYMENTS_URL);
 }
 bootstrap();
