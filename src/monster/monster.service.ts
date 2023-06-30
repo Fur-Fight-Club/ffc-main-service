@@ -29,6 +29,11 @@ export class MonsterService {
     return monsters;
   }
 
+  async getAllMonsters(): Promise<MonsterDto[]> {
+    const monsters = await this.monsterRepository.getMonsters({});
+    return monsters;
+  }
+
   async getMonstersForOneUser(userId: number): Promise<MonsterDto[]> {
     const monsters = await this.monsterRepository.getMonsters({
       where: {

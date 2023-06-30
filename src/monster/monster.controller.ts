@@ -31,10 +31,19 @@ export class MonsterController {
   @Get()
   @HttpCode(200)
   @UseGuards(UserGuard)
-  @Roles("USER", "ADMIN", "MONSTER_OWNER")
-  //Get all monsters for one user
+  @Roles("USER", "ADMIN")
+  //Get all monsters for the current user
   async getAll(@Request() req: JWTUserRequest) {
     return await this.monsterService.getMonsters(req.user.sub);
+  }
+
+  @Get("all")
+  @HttpCode(200)
+  @UseGuards(UserGuard)
+  @Roles("ADMIN")
+  //Get all monsters for all users
+  async getAllMonsters() {
+    return await this.monsterService.getAllMonsters();
   }
 
   @Get("userMonster/:id")
@@ -50,7 +59,7 @@ export class MonsterController {
     type: Number,
   })
   @UseGuards(UserGuard)
-  @Roles("USER", "ADMIN", "MONSTER_OWNER")
+  @Roles("USER", "ADMIN")
   @HttpCode(200)
   async getOne(
     @Param("id", ParseIntPipe) data: number,
