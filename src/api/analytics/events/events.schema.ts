@@ -394,6 +394,32 @@ export interface HeatmapData {
   };
 }
 
+export const demographicDataEventSchema = z.object({
+  ip: z.string(),
+});
+
+export class DemographicDataEventDto extends createZodDto(
+  demographicDataEventSchema
+) {
+  @ApiProperty({
+    description: "The ip of the user",
+    example: "34.140.90.116",
+  })
+  ip: string;
+}
+
+export interface DemographicData {
+  id: string;
+  event: "demographic";
+  timestamp: number;
+  ip: string;
+  isp: string;
+  country: string;
+  timezone: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface EventsApi {
   createButtonClickEvent(
     createButtonClickEventDto: ButtonClickDto
@@ -407,6 +433,10 @@ export interface EventsApi {
 
   createLeaveAppEvent(createLeaveAppEventDto: LeaveAppEventDto): Promise<void>;
 
+  createDemographicDataEvent(
+    createDemographicDataEventDto: DemographicDataEventDto
+  ): Promise<{ success: boolean }>;
+
   getButtonClickEvents(): Promise<ButtonClickDto[]>;
 
   getMouseClickEvents(): Promise<MouseClickDto[]>;
@@ -416,6 +446,8 @@ export interface EventsApi {
   getLeaveAppEvents(): Promise<LeaveAppEventDto[]>;
 
   getHeatmapData(getHeatmapDataDto: GetHeatmapDataDto): Promise<HeatmapData[]>;
+
+  getDemographicData(): Promise<DemographicData[]>;
 }
 
 export const EventsApi = "EventsApi";

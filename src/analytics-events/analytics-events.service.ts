@@ -1,5 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
+  DemographicData,
+  DemographicDataEventDto,
   EventsApi,
   GetHeatmapDataDto,
   HeatmapData,
@@ -38,5 +40,13 @@ export class AnalyticsEventsService {
   }
   getHeatmapData(getHeatmapData: GetHeatmapDataDto): Promise<HeatmapData[]> {
     return this.eventsApi.getHeatmapData(getHeatmapData);
+  }
+  getDemographicData(): Promise<DemographicData[]> {
+    return this.eventsApi.getDemographicData();
+  }
+  setDemographicData(
+    demographicData: DemographicDataEventDto
+  ): Promise<{ success: boolean }> {
+    return this.eventsApi.createDemographicDataEvent(demographicData);
   }
 }

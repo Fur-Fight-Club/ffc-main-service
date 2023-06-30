@@ -8,6 +8,8 @@ import {
   LeaveAppEventDto,
   GetHeatmapDataDto,
   HeatmapData,
+  DemographicDataEventDto,
+  DemographicData,
 } from "src/api/analytics/events/events.schema";
 
 @Controller("analytics-events")
@@ -69,5 +71,19 @@ export class AnalyticsEventsController {
     @Body(ZodValidationPipe) getHeatmapData: GetHeatmapDataDto
   ): Promise<HeatmapData[]> {
     return await this.analyticsEventsService.getHeatmapData(getHeatmapData);
+  }
+
+  @Post("demographic-data")
+  async demographicData(
+    @Body(ZodValidationPipe) demographicData: DemographicDataEventDto
+  ): Promise<{ success: boolean }> {
+    return await this.analyticsEventsService.setDemographicData(
+      demographicData
+    );
+  }
+
+  @Get("demographic-data")
+  async getDemographicData(): Promise<DemographicData[]> {
+    return await this.analyticsEventsService.getDemographicData();
   }
 }

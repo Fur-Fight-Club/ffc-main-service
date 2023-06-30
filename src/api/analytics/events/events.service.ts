@@ -1,6 +1,8 @@
 import { Inject, Injectable, Provider } from "@nestjs/common";
 import {
   ButtonClickDto,
+  DemographicData,
+  DemographicDataEventDto,
   EventsApi,
   GetHeatmapDataDto,
   HeatmapData,
@@ -139,6 +141,35 @@ class EventsImpl implements EventsApi {
         body: JSON.stringify({
           ...getHeatmapDataDto,
         }),
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+
+  async createDemographicDataEvent(
+    createDemographicDataEventDto: DemographicDataEventDto
+  ): Promise<{ success: boolean }> {
+    const response = await handleApiResponse<{ success: boolean }>(
+      await this.analyticsApi.fetch(`events/demographic-data`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...createDemographicDataEventDto,
+        }),
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+
+  async getDemographicData(): Promise<DemographicData[]> {
+    const response = await handleApiResponse<DemographicData[]>(
+      await this.analyticsApi.fetch(`events/demographic-data`, {
+        method: "GET",
       })
     );
 
