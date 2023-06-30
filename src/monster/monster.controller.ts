@@ -111,7 +111,7 @@ export class MonsterController {
     type: Number,
   })
   async delete(
-    @Param("id", ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: string,
     @Request() req: JWTUserRequest
   ) {
     return await this.monsterService.deleteMonster({ id: +id }, req.user.sub);

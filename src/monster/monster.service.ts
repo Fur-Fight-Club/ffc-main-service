@@ -1,8 +1,10 @@
 import {
   BadGatewayException,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { UserApi } from "src/api/auth/user/user.schema";
 import { ImageData, ImgurService } from "src/services/imgur.service";
 import { MonsterRepository } from "./monster.repository";
 import {
@@ -15,6 +17,7 @@ import {
 @Injectable()
 export class MonsterService {
   constructor(
+    @Inject(UserApi) private userApi: UserApi,
     private monsterRepository: MonsterRepository,
     private readonly imgurService: ImgurService
   ) {}
@@ -144,7 +147,9 @@ export class MonsterService {
       },
     });
 
-    if (!monsterToBeDeleted || monsterToBeDeleted.fk_user !== userId) {
+    const user = await this.userApi.getById(userId);
+
+    if (!user.role.includes("ADMIN") && monsterToBeDeleted.fk_user !== userId) {
       throw new NotFoundException("Monster not found");
     }
 
