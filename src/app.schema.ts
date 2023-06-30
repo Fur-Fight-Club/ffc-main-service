@@ -6,6 +6,7 @@ export const serverHealthcheckSchema = z.object({
   prisma_status: z.number(),
   timestamp: z.date(),
   service_name: z.string(),
+  services: z.any(),
 });
 
 export type ServerHealthcheck = z.infer<typeof serverHealthcheckSchema>;

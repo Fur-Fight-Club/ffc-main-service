@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import configuration from "./config/configuration";
 import { PrismaService } from "./services/prisma.service";
 import { UserModule } from "./user/user.module";
@@ -12,10 +12,10 @@ import { MonsterModule } from "./monster/monster.module";
 import { CreditsModule } from "./credits/credits.module";
 import { PaymentsModule } from "./payments/payments.module";
 import { ArenasModule } from "./arenas/arenas.module";
-import { WalletModule } from './wallet/wallet.module';
-import { BankAccountModule } from './bank-account/bank-account.module';
-import { PushNotificationsModule } from './push-notifications/push-notifications.module';
-import { AnalyticsEventsModule } from './analytics-events/analytics-events.module';
+import { WalletModule } from "./wallet/wallet.module";
+import { BankAccountModule } from "./bank-account/bank-account.module";
+import { PushNotificationsModule } from "./push-notifications/push-notifications.module";
+import { AnalyticsEventsModule } from "./analytics-events/analytics-events.module";
 
 @Module({
   imports: [
@@ -37,6 +37,6 @@ import { AnalyticsEventsModule } from './analytics-events/analytics-events.modul
     AnalyticsEventsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, ConfigService],
 })
 export class AppModule {}
