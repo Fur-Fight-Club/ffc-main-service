@@ -95,13 +95,16 @@ export class MonsterController {
 
   @Delete(":id")
   @UseGuards(UserGuard)
-  @Roles("USER", "ADMIN", "MONSTER_OWNER")
+  @Roles("USER", "ADMIN")
   @ApiParam({
     name: "id",
     description: "Monster ID",
     type: Number,
   })
-  async delete(@Param("id") id: string, @Request() req: JWTUserRequest) {
+  async delete(
+    @Param("id", ParseIntPipe) id: number,
+    @Request() req: JWTUserRequest
+  ) {
     return await this.monsterService.deleteMonster({ id: +id }, req.user.sub);
   }
 }
