@@ -43,15 +43,12 @@ export class AppService {
           status: response.status,
         };
       } catch (error) {
-        throw new InternalServerErrorException(
-          {
-            name: service.name,
-            response: null,
-            status: "ERROR",
-            error,
-          },
-          "SERVICE_UNAVAILABLE"
-        );
+        return {
+          name: service.name,
+          url: service.url,
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error,
+        };
       }
     });
 
