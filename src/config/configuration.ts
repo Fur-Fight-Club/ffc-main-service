@@ -1,6 +1,6 @@
 export default () => ({
   app_port: process.env.APP_PORT ?? 4000,
-  service: "ffc-notifications-service",
+  service: "ffc-main-service",
   issuer: process.env.ISSUER ?? "http://api.ffc.mistergooddeal.org",
   authorizedServices: [
     "ffc-analytics-service",
