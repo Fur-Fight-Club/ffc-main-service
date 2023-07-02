@@ -18,8 +18,30 @@ export class MatchRepository {
         Monster1: true,
         Monster2: true,
         Arena: true,
-        MatchMessage: true,
-        Transaction: true,
+        MatchMessage: {
+          include: {
+            User: {
+              select: {
+                firstname: true,
+                lastname: true,
+              },
+            },
+          },
+        },
+        Transaction: {
+          include: {
+            Wallet: {
+              include: {
+                User: {
+                  select: {
+                    firstname: true,
+                    lastname: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
