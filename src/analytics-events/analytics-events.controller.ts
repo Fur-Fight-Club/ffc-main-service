@@ -10,6 +10,9 @@ import {
   HeatmapData,
   DemographicDataEventDto,
   DemographicData,
+  GetChartsDataResponse,
+  GetStatCardResponse,
+  GetTablesDataResponse,
 } from "src/api/analytics/events/events.schema";
 
 @Controller("analytics-events")
@@ -85,5 +88,20 @@ export class AnalyticsEventsController {
   @Get("demographic-data")
   async getDemographicData(): Promise<DemographicData[]> {
     return await this.analyticsEventsService.getDemographicData();
+  }
+
+  @Get("cards-data")
+  async getStatCards(): Promise<GetStatCardResponse> {
+    return await this.analyticsEventsService.getStatCards();
+  }
+
+  @Get("tables-data")
+  async getTablesDatas(): Promise<GetTablesDataResponse> {
+    return await this.analyticsEventsService.getTablesDatas();
+  }
+
+  @Get("charts-data")
+  async getChartsData(): Promise<GetChartsDataResponse> {
+    return await this.analyticsEventsService.getChartsData();
   }
 }

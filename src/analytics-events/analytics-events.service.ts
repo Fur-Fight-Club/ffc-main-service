@@ -3,7 +3,10 @@ import {
   DemographicData,
   DemographicDataEventDto,
   EventsApi,
+  GetChartsDataResponse,
   GetHeatmapDataDto,
+  GetStatCardResponse,
+  GetTablesDataResponse,
   HeatmapData,
   MouseClickDto,
 } from "src/api/analytics/events/events.schema";
@@ -48,5 +51,14 @@ export class AnalyticsEventsService {
     demographicData: DemographicDataEventDto
   ): Promise<{ success: boolean }> {
     return this.eventsApi.createDemographicDataEvent(demographicData);
+  }
+  getStatCards(): Promise<GetStatCardResponse> {
+    return this.eventsApi.getStatCardData();
+  }
+  getTablesDatas(): Promise<GetTablesDataResponse> {
+    return this.eventsApi.getTablesData();
+  }
+  getChartsData(): Promise<GetChartsDataResponse> {
+    return this.eventsApi.getChartsData();
   }
 }
