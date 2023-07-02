@@ -22,6 +22,7 @@ export class MatchRepository {
           include: {
             User: {
               select: {
+                id: true,
                 firstname: true,
                 lastname: true,
               },
