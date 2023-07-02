@@ -4,7 +4,10 @@ import {
   DemographicData,
   DemographicDataEventDto,
   EventsApi,
+  GetChartsDataResponse,
   GetHeatmapDataDto,
+  GetStatCardResponse,
+  GetTablesDataResponse,
   HeatmapData,
   LeaveAppEventDto,
   MouseClickDto,
@@ -16,6 +19,7 @@ import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 @Injectable()
 class EventsImpl implements EventsApi {
   constructor(@Inject(AnalyticsApi) private analyticsApi: AnalyticsApi) {}
+
   async createButtonClickEvent(
     createButtonClickEventDto: ButtonClickDto
   ): Promise<void> {
@@ -169,6 +173,40 @@ class EventsImpl implements EventsApi {
   async getDemographicData(): Promise<DemographicData[]> {
     const response = await handleApiResponse<DemographicData[]>(
       await this.analyticsApi.fetch(`events/demographic-data`, {
+        method: "GET",
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+
+  async getStatCardData(): Promise<GetStatCardResponse> {
+    const response = await handleApiResponse<GetStatCardResponse>(
+      await this.analyticsApi.fetch(`events/cards-data`, {
+        method: "GET",
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+  async getTablesData(): Promise<GetTablesDataResponse> {
+    const response = await handleApiResponse<GetTablesDataResponse>(
+      await this.analyticsApi.fetch(`events/tables-data`, {
+        method: "GET",
+      })
+    );
+
+    checkApiResponse(response);
+
+    return response;
+  }
+  async getChartsData(): Promise<GetChartsDataResponse> {
+    const response = await handleApiResponse<GetChartsDataResponse>(
+      await this.analyticsApi.fetch(`events/charts-data`, {
         method: "GET",
       })
     );
