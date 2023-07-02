@@ -1,14 +1,14 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
-  Invoice,
   StripePaymentStatus,
   Transaction,
 } from "ffc-prisma-package/dist/client";
-import { createZodDto } from "nestjs-zod";
-import { z } from "nestjs-zod/z";
 
 export interface PaymentApi {
-  paymentCallback(callback: string, session_id: string);
+  paymentCallback(
+    callback: string,
+    session_id: string
+  ): Promise<PaymentCallbackResponse>;
+  getAllPayements(): Promise<Transaction[]>;
 }
 
 export type StripeCallback = "success" | "error";
