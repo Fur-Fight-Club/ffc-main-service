@@ -28,6 +28,7 @@ import {
 } from "./match.schema";
 import { MatchService } from "./match.service";
 import { Transaction } from "ffc-prisma-package/dist/client";
+import { MatchGateway } from "./match.gateway";
 
 @Controller("match")
 // @UseGuards(UserGuard)

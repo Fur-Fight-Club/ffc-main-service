@@ -29,6 +29,7 @@ import {
 } from "ffc-prisma-package/dist/client";
 import { uuid } from "uuidv4";
 import { connect } from "http2";
+import { MatchGateway } from "./match.gateway";
 
 @Injectable()
 export class MatchService {
@@ -37,16 +38,13 @@ export class MatchService {
     private matchRepository: MatchRepository,
     private monsterRepository: MonsterRepository,
     private readonly prisma: PrismaService,
+    private matchGateway: MatchGateway,
     @Inject(WalletApi) private walletApi: WalletApi
   ) {}
 
   async getMatches(): Promise<MatchInterface[]> {
     try {
-      const matches = await this.matchRepository.getMatches({
-        where: {
-          matchEndDate: null,
-        },
-      });
+      const matches = await this.matchRepository.getMatches({});
       return matches.map((match) => parseToZodObject(match));
     } catch (error) {
       throw error;
@@ -433,6 +431,8 @@ export class MatchService {
         })),
       });
 
+      this.matchGateway.sendMessageToClient({ update: true });
+
       return parseToZodObject(match);
     } catch (error) {
       handleMatchMessageError(error);
@@ -440,7 +440,14 @@ export class MatchService {
   }
 
   async sendMessage(sender: number, match: number, message: string) {
-    return this.matchMessageApi.sendMessage(sender, match, message);
+    const messageRes = await this.matchMessageApi.sendMessage(
+      sender,
+      match,
+      message
+    );
+    this.matchGateway.sendMessageToClient({ update: true });
+
+    return messageRes;
   }
 
   private checkIfMonsterIsNotTheSameOnMatch = async (
@@ -554,6 +561,8 @@ export class MatchService {
         },
       },
     });
+    this.matchGateway.sendMessageToClient({ update: true });
+
     return matchBet;
   }
 }

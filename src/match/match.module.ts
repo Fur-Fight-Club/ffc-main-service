@@ -15,6 +15,7 @@ import { PaymentsApiProvider } from "src/api/payments/payments.service";
 import { WalletApiProvider } from "src/api/payments/wallet/wallet.service";
 import { WalletModule } from "src/wallet/wallet.module";
 import { PaymentsModule } from "src/api/payments/payments.module";
+import { MatchGateway } from "./match.gateway";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { PaymentsModule } from "src/api/payments/payments.module";
     MonsterRepository,
     PaymentsApiProvider,
     WalletApiProvider,
+    MatchGateway,
   ],
 })
 export class MatchModule {}

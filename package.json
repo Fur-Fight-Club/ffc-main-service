@@ -34,7 +34,9 @@
     "node-fetch": "^2.6.9",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "@nestjs/platform-socket.io": "^9.4.0",
+    "@nestjs/websockets": "^9.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
