@@ -416,7 +416,7 @@ export class MatchService {
         },
         data: {
           amount: {
-            increment: +(totalBetsAmount * winnerRatio).toFixed(0),
+            increment: totalBetsAmount * winnerRatio,
           },
         },
       });
@@ -424,7 +424,7 @@ export class MatchService {
       // Create a transaction for each bettor
       await this.prisma.transaction.createMany({
         data: bettorsWallet.map((walletId) => ({
-          amount: +(totalBetsAmount * winnerRatio).toFixed(0),
+          amount: totalBetsAmount * winnerRatio,
           walletId,
           tag: "BET",
           type: "OUT",
