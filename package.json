@@ -25,18 +25,18 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-socket.io": "^9.4.0",
     "@nestjs/swagger": "^6.3.0",
+    "@nestjs/websockets": "^9.4.0",
     "cors": "^2.8.5",
-    "ffc-prisma-package": "^2.14.5",
+    "ffc-prisma-package": "^2.16.0",
     "fs": "^0.0.1-security",
     "imgur": "^2.3.0",
     "nestjs-zod": "^2.2.0",
     "node-fetch": "^2.6.9",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "uuidv4": "^6.2.13",
-    "@nestjs/platform-socket.io": "^9.4.0",
-    "@nestjs/websockets": "^9.4.0"
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
