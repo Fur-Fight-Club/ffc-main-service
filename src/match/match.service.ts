@@ -549,7 +549,7 @@ export class MatchService {
         type: TransactionType.IN,
         Invoice: {
           create: {
-            amount: body.amount,
+            amount: +body.amount.toFixed(0),
             url: "",
             uuid: uuid(),
             User: {
