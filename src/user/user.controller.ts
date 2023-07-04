@@ -11,7 +11,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { ZodValidationPipe } from "nestjs-zod";
 import {
   LoginRequest,
   LoginResponse,
@@ -23,8 +22,8 @@ import {
 } from "src/api/auth/user/user.schema";
 import { UserGuard } from "src/auth/auth-user.guard";
 import { JWTUserRequest } from "src/auth/auth.model";
-import { UserService } from "./user.service";
 import { Roles } from "src/decorators/roles.decorator";
+import { UserService } from "./user.service";
 
 @Controller("user")
 @ApiTags("User controller")
@@ -81,13 +80,12 @@ export class UserController {
     type: UserResponse,
   })
   async update(
-    @Param("id") id: number,
-    @Body() body: UpdateRequest,
-    @Request() request: JWTUserRequest
+    @Param("id", ParseIntPipe) id: number,
+    @Body() body: UpdateRequest
+    // @Request() request: JWTUserRequest
   ) {
-    console.log({ ...body, id: request.user.sub });
-
-    return await this.userService.update({ ...body, id: request.user.sub });
+    return await this.userService.update({ ...body, id: +id });
+    // return await this.userService.update({ ...body, id: request.user.sub });
   }
 
   @Get(":id")
