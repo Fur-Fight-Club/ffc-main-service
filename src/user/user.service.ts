@@ -107,8 +107,6 @@ export class UserService {
   }
 
   async updateEmail(updateEmailRequest: UpdateEmailUserDto) {
-    console.log(updateEmailRequest);
-
     const update = await this.userApi.updateEmailById(updateEmailRequest);
 
     if (update) {

@@ -73,6 +73,23 @@ export class UserController {
     return await this.userService.getMe(request.user.sub);
   }
 
+  @Patch("password-patch")
+  @UseGuards(UserGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: "L'utilisateur est retourné",
+    type: UserResponse,
+  })
+  async updatePassword(
+    @Request() request: JWTUserRequest,
+    @Body() body: UpdatePasswordUserDto
+  ) {
+    return await this.userService.updatePassword({
+      ...body,
+      id: +request.user.sub,
+    });
+  }
+
   @Patch(":id")
   @UseGuards(UserGuard)
   @ApiBearerAuth()
@@ -85,8 +102,6 @@ export class UserController {
     @Body() body: UpdateRequest,
     @Request() request: JWTUserRequest
   ) {
-    console.log({ ...body, id: request.user.sub });
-
     return await this.userService.update({ ...body, id: request.user.sub });
   }
 
@@ -114,23 +129,6 @@ export class UserController {
     return await this.userService.remove(id);
   }
 
-  @Patch("password-update")
-  @UseGuards(UserGuard)
-  @ApiBearerAuth()
-  @ApiResponse({
-    description: "L'utilisateur est retourné",
-    type: UserResponse,
-  })
-  async updatePassword(
-    @Request() request: JWTUserRequest,
-    @Body() body: UpdatePasswordUserDto
-  ) {
-    return await this.userService.updatePassword({
-      ...body,
-      id: +request.user.sub,
-    });
-  }
-
   @Patch("email-update")
   @UseGuards(UserGuard)
   @ApiBearerAuth()
@@ -142,6 +140,7 @@ export class UserController {
     @Request() request: JWTUserRequest,
     @Body() body: UpdateEmailUserDto
   ) {
+    console.log("body", body);
     return await this.userService.updateEmail({
       email: body.email,
       id: +request.user.sub,
