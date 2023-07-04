@@ -16,6 +16,7 @@ import { WalletModule } from "./wallet/wallet.module";
 import { BankAccountModule } from "./bank-account/bank-account.module";
 import { PushNotificationsModule } from "./push-notifications/push-notifications.module";
 import { AnalyticsEventsModule } from "./analytics-events/analytics-events.module";
+import { TournamentsModule } from './tournaments/tournaments.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AnalyticsEventsModule } from "./analytics-events/analytics-events.modul
     BankAccountModule,
     PushNotificationsModule,
     AnalyticsEventsModule,
+    TournamentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, ConfigService],
