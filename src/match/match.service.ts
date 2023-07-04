@@ -4,11 +4,19 @@ import {
   Inject,
   Injectable,
 } from "@nestjs/common";
+import {
+  Match,
+  TransactionTag,
+  TransactionType,
+} from "ffc-prisma-package/dist/client";
 import { MatchMessageApi } from "src/api/notifications/match-message/match-message.interface";
+import { WalletApi } from "src/api/payments/wallet/wallet.schema";
 import { MonsterRepository } from "src/monster/monster.repository";
 import { PrismaService } from "src/services/prisma.service";
 import { handleMatchMessageError } from "src/utils/error/match.error";
 import { parseToZodObject } from "src/utils/match.utils";
+import { uuid } from "uuidv4";
+import { MatchGateway } from "./match.gateway";
 import { MatchRepository } from "./match.repository";
 import {
   CloseMatchBodyDto,
@@ -22,14 +30,6 @@ import {
   UpdateMatchDto,
   ValidateMatchWaitingListServiceDto,
 } from "./match.schema";
-import { WalletApi } from "src/api/payments/wallet/wallet.schema";
-import {
-  TransactionTag,
-  TransactionType,
-} from "ffc-prisma-package/dist/client";
-import { uuid } from "uuidv4";
-import { connect } from "http2";
-import { MatchGateway } from "./match.gateway";
 
 @Injectable()
 export class MatchService {
@@ -70,13 +70,14 @@ export class MatchService {
     }
   }
 
-  async createMatch(params: CreateMatchDto): Promise<MatchInterface> {
+  async createMatch(params: CreateMatchDto): Promise<Match> {
     try {
       const {
         fk_arena,
         weight_category,
         matchStartDate: startDate,
         monster1,
+        entry_cost,
       } = params;
 
       const match = await this.matchRepository.createMatch({
@@ -93,10 +94,11 @@ export class MatchService {
               id: fk_arena,
             },
           },
+          entry_cost,
         },
       });
 
-      return parseToZodObject(match);
+      return match;
     } catch (error) {
       handleMatchMessageError(error);
     }

@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
+import { Transaction } from "ffc-prisma-package/dist/client";
 import { ZodValidationPipe } from "nestjs-zod";
 import {
   CreateMessageApiBody,
@@ -27,8 +28,6 @@ import {
   ValidateMatchWaitingListControllerDto,
 } from "./match.schema";
 import { MatchService } from "./match.service";
-import { Transaction } from "ffc-prisma-package/dist/client";
-import { MatchGateway } from "./match.gateway";
 
 @Controller("match")
 // @UseGuards(UserGuard)
