@@ -29,7 +29,7 @@
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/websockets": "^9.4.0",
     "cors": "^2.8.5",
-    "ffc-prisma-package": "^2.17.1",
+    "ffc-prisma-package": "^2.17.2",
     "fs": "^0.0.1-security",
     "imgur": "^2.3.0",
     "nestjs-zod": "^2.2.0",
