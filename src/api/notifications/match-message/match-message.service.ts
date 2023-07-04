@@ -1,13 +1,8 @@
-import {
-  Inject,
-  Injectable,
-  Provider,
-  UnauthorizedException,
-} from "@nestjs/common";
-import { MatchMessageApi } from "./match-message.interface";
+import { Inject, Injectable, Provider } from "@nestjs/common";
+import { MatchMessage } from "ffc-prisma-package/dist/client";
 import { checkApiResponse, handleApiResponse } from "src/utils/api.utils";
 import { NotificationsApi } from "../notifications.interface";
-import { MatchMessage } from "ffc-prisma-package/dist/client";
+import { MatchMessageApi } from "./match-message.interface";
 
 @Injectable()
 class MatchMessageImpl implements MatchMessageApi {
@@ -19,8 +14,6 @@ class MatchMessageImpl implements MatchMessageApi {
     match: number,
     message: string
   ): Promise<MatchMessage> {
-    console.log({ sender, match, message });
-
     const response = await handleApiResponse<MatchMessage>(
       await this.notificationsApi.fetch(`match-message`, {
         method: "POST",
