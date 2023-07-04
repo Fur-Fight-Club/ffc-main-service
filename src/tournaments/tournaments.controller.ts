@@ -8,8 +8,14 @@ import {
   Delete,
 } from "@nestjs/common";
 import { TournamentsService } from "./tournaments.service";
-import { CreateTournamentDto, UpdateTournamentDto } from "./tournaments.schema";
+import {
+  CreateTournamentDto,
+  EndRoundDto,
+  JoinTournamentDto,
+  UpdateTournamentDto,
+} from "./tournaments.schema";
 import { ApiTags } from "@nestjs/swagger";
+import { ZodValidationPipe } from "nestjs-zod";
 
 @Controller("tournaments")
 @ApiTags("Tournaments controller")
@@ -17,7 +23,7 @@ export class TournamentsController {
   constructor(private readonly tournamentsService: TournamentsService) {}
 
   @Post()
-  create(@Body() createTournamentDto: CreateTournamentDto) {
+  create(@Body(ZodValidationPipe) createTournamentDto: CreateTournamentDto) {
     return this.tournamentsService.create(createTournamentDto);
   }
 
@@ -34,7 +40,7 @@ export class TournamentsController {
   @Patch(":id")
   update(
     @Param("id") id: string,
-    @Body() updateTournamentDto: UpdateTournamentDto
+    @Body(ZodValidationPipe) updateTournamentDto: UpdateTournamentDto
   ) {
     return this.tournamentsService.update(+id, updateTournamentDto);
   }
@@ -42,5 +48,26 @@ export class TournamentsController {
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.tournamentsService.remove(+id);
+  }
+
+  @Post(":id/join")
+  joinTournament(
+    @Param("id") id: string,
+    @Body(ZodValidationPipe) body: JoinTournamentDto
+  ) {
+    return this.tournamentsService.joinTournament(+id, body);
+  }
+
+  @Get(":id/start")
+  startTournament(@Param("id") id: string) {
+    return this.tournamentsService.startTournament(+id);
+  }
+
+  @Post(":id/round/end")
+  endRound(
+    @Param("id") id: string,
+    @Body(ZodValidationPipe) body: EndRoundDto
+  ) {
+    return this.tournamentsService.endRound(+id, body);
   }
 }
