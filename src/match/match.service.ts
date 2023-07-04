@@ -44,7 +44,11 @@ export class MatchService {
 
   async getMatches(): Promise<MatchInterface[]> {
     try {
-      const matches = await this.matchRepository.getMatches({});
+      const matches = await this.matchRepository.getMatches({
+        where: {
+          tournamentId: null,
+        },
+      });
       return matches.map((match) => parseToZodObject(match));
     } catch (error) {
       throw error;
