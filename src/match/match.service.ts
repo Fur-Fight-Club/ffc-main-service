@@ -336,8 +336,8 @@ export class MatchService {
       });
 
       // Calculate mmr gain/loss
-      const winnerMmrGain = loser.mmr * 0.1;
-      const loserMmrLoss = winner.mmr * 0.1 + loser.mmr * 0.1;
+      const winnerMmrGain = Math.round(loser.mmr * 0.1);
+      const loserMmrLoss = Math.floor(winner.mmr * 0.1 + loser.mmr * 0.1);
 
       // Update winner mmr
       await this.prisma.monster.update({
@@ -407,6 +407,8 @@ export class MatchService {
         ...new Set(winnerBets.map((transaction) => transaction.walletId)),
       ];
 
+      const amountToDistribute = Math.floor(totalBetsAmount * winnerRatio);
+
       // Recredit bettors
       await this.prisma.wallet.updateMany({
         where: {
@@ -416,7 +418,7 @@ export class MatchService {
         },
         data: {
           amount: {
-            increment: +(totalBetsAmount * winnerRatio).toFixed(0),
+            increment: isNaN(amountToDistribute) ? 0 : amountToDistribute,
           },
         },
       });
@@ -424,7 +426,7 @@ export class MatchService {
       // Create a transaction for each bettor
       await this.prisma.transaction.createMany({
         data: bettorsWallet.map((walletId) => ({
-          amount: +(totalBetsAmount * winnerRatio).toFixed(0),
+          amount: isNaN(amountToDistribute) ? 0 : amountToDistribute,
           walletId,
           tag: "BET",
           type: "OUT",
@@ -549,7 +551,7 @@ export class MatchService {
         type: TransactionType.IN,
         Invoice: {
           create: {
-            amount: +body.amount.toFixed(0),
+            amount: Math.floor(+body.amount),
             url: "",
             uuid: uuid(),
             User: {
