@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, User } from "ffc-prisma-package/dist/client";
-import { inc } from "semver";
 import { PrismaService } from "src/services/prisma.service";
 
 @Injectable()
@@ -16,8 +15,16 @@ export class UserRepository {
       include: {
         Monster: {
           include: {
-            MatchFighter1: true,
-            MatchFighter2: true,
+            MatchFighter1: {
+              include: {
+                Monster1: true,
+              },
+            },
+            MatchFighter2: {
+              include: {
+                Monster2: true,
+              },
+            },
           },
         },
       },
