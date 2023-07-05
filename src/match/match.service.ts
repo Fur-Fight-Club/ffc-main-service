@@ -111,7 +111,7 @@ export class MatchService {
       const { id, monster } = params;
 
       await this.checkIfMonsterIsNotTheSameOnMatch(id, monster);
-
+      await this.checkIfPlaceAvailable(id);
       await this.checkIfMonsterMMRIsNotMoreThan300(id, monster);
 
       const match = await this.matchRepository.updateMatch({
@@ -470,6 +470,16 @@ export class MatchService {
       }
     } catch (error) {
       throw error;
+    }
+  };
+
+  private checkIfPlaceAvailable = async (matchId: number) => {
+    const match = await this.matchRepository.getMatch({
+      where: { id: matchId },
+    });
+
+    if (match?.fk_monster_2) {
+      throw new ConflictException(`The match is already full`);
     }
   };
 
