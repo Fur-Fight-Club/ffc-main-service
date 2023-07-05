@@ -111,18 +111,15 @@ export class MatchService {
       const { id, monster } = params;
 
       await this.checkIfMonsterIsNotTheSameOnMatch(id, monster);
-      await this.checkIfMonsterIsNotInTheWaitingListOfTheMatch(id, monster);
+
+      await this.checkIfMonsterMMRIsNotMoreThan300(id, monster);
 
       const match = await this.matchRepository.updateMatch({
         where: { id },
         data: {
-          MatchWaitingList: {
-            create: {
-              Monster: {
-                connect: {
-                  id: monster,
-                },
-              },
+          Monster2: {
+            connect: {
+              id: monster,
             },
           },
         },
@@ -476,28 +473,23 @@ export class MatchService {
     }
   };
 
-  private checkIfMonsterIsNotInTheWaitingListOfTheMatch = async (
+  private checkIfMonsterMMRIsNotMoreThan300 = async (
     matchId: number,
     monsterId: number
   ) => {
-    try {
-      const currentWaitingList = await this.matchRepository.getMatchWaitingList(
-        {
-          where: {
-            Match: {
-              id: matchId,
-            },
-            Monster: {
-              id: monsterId,
-            },
-          },
-        }
-      );
-      if (currentWaitingList.length > 0) {
-        throw new Error(`Monster is already in the waiting list of the match`);
-      }
-    } catch (error) {
-      throw error;
+    const match = await this.matchRepository.getMatch({
+      where: { id: matchId },
+    });
+
+    const monster = await this.prisma.monster.findUnique({
+      where: { id: monsterId },
+    });
+
+    // CHeck if the MMR of the Monster2 is +- 300 of the Monster1
+    if (match.Monster1.mmr + 300 < monster.mmr) {
+      throw new ConflictException(`The MMR of the monster is too high`);
+    } else if (match.Monster1.mmr - 300 > monster.mmr) {
+      throw new ConflictException(`The MMR of the monster is too low`);
     }
   };
 
