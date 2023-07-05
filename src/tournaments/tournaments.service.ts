@@ -251,6 +251,10 @@ export class TournamentsService {
       },
     });
 
+    if (tournament.Participants.length < 8) {
+      throw new BadRequestException("Tournament is not full");
+    }
+
     const [match1, match2, match3, match4] = tournament.Matches;
 
     const participants = tournament.Participants.sort(
