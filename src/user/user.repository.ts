@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, User } from "ffc-prisma-package/dist/client";
+import { inc } from "semver";
 import { PrismaService } from "src/services/prisma.service";
 
 @Injectable()
@@ -12,7 +13,14 @@ export class UserRepository {
     const { where } = params;
     return this.prisma.user.findUnique({
       where,
-      include: { Monster: true },
+      include: {
+        Monster: {
+          include: {
+            MatchFighter1: true,
+            MatchFighter2: true,
+          },
+        },
+      },
     });
   }
 }
