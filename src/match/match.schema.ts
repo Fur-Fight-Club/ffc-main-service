@@ -93,8 +93,6 @@ export class CreateMatchDto extends createZodDto(createMatchSchema) {
   longitude: number;
   @ApiProperty({ type: "number", format: "int32" })
   entry_cost: number;
-  @ApiProperty({ type: "number", format: "int32" })
-  user: number;
 }
 
 export class GetMatchDto extends createZodDto(getMatchSchema) {}
