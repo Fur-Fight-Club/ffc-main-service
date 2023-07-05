@@ -125,6 +125,19 @@ export class MatchService {
         },
       });
 
+      await this.prisma.transaction.create({
+        data: {
+          amount: entry_cost,
+          tag: "FEE",
+          type: "IN",
+          Wallet: {
+            connect: {
+              id: userWallet.id,
+            },
+          },
+        },
+      });
+
       return match;
     } catch (error) {
       handleMatchMessageError(error);
