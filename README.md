@@ -5,7 +5,7 @@ It runs on port `4000` and is accessible at the following url: [http://localhost
 
 
 
-## Start the service
+## 🏃‍♂️ Start the service
 
 You can either run the service with docker or with node.
 
@@ -46,3 +46,17 @@ kubectl apply -f k8s/deployment.yaml
 ```bash
 kubectl apply -f k8s/service.yaml
 ```
+
+### Automatic deployment
+
+The service is automatically deployed on the GCloud cluster when a new tag is pushed on the master branch.
+
+## 🧪 Tests
+
+The project is tested with Jest. To run the tests, run the following command:
+
+```bash
+npm run test
+```
+
+The project is tested on each commits and before the deployment on the GCloud cluster.
