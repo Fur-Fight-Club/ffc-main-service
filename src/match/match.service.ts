@@ -98,6 +98,46 @@ export class MatchService {
         },
       });
 
+      const monster = await this.monsterRepository.getMonster({
+        where: {
+          id: monster1,
+        },
+      });
+
+      const userId = monster.fk_user;
+
+      const userWallet = await this.prisma.wallet.findFirst({
+        where: {
+          User: {
+            id: userId,
+          },
+        },
+      });
+
+      const newBalance = userWallet.amount - entry_cost;
+
+      await this.prisma.wallet.update({
+        where: {
+          id: userWallet.id,
+        },
+        data: {
+          amount: newBalance,
+        },
+      });
+
+      await this.prisma.transaction.create({
+        data: {
+          amount: entry_cost,
+          tag: "FEE",
+          type: "IN",
+          Wallet: {
+            connect: {
+              id: userWallet.id,
+            },
+          },
+        },
+      });
+
       return match;
     } catch (error) {
       handleMatchMessageError(error);
