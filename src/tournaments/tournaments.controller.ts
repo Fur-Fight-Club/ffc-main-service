@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { TournamentsService } from "./tournaments.service";
 import {
@@ -16,8 +17,10 @@ import {
 } from "./tournaments.schema";
 import { ApiTags } from "@nestjs/swagger";
 import { ZodValidationPipe } from "nestjs-zod";
+import { UserGuard } from "src/auth/auth-user.guard";
 
 @Controller("tournaments")
+@UseGuards(UserGuard)
 @ApiTags("Tournaments controller")
 export class TournamentsController {
   constructor(private readonly tournamentsService: TournamentsService) {}
